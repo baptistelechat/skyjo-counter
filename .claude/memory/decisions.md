@@ -11,4 +11,4 @@ register: decisions
 | [BDR-261118_2357-2](decisions/BDR-261118_2357-2.md) | 2026-11-19 | Grille reconstruite en quadrillage (3 lignes, ≤ 4 colonnes) | #grille #quadrillage #cartes-collees #perspective #skyjo #mirage | actif |
 | [BDR-261118_2357-3](decisions/BDR-261118_2357-3.md) | 2026-11-19 | Recadrage auto de la grille si carte < 15 % de la photo | #mirage #recadrage #resolution #ocr #scanner #performance | actif |
 | [BDR-261118_2357-4](decisions/BDR-261118_2357-4.md) | 2026-11-19 | Appareil photo natif, pas de viseur getUserMedia | #camera #mobile #capture #ux #getusermedia #pwa | actif |
-| [BDR-261118_2357-5](decisions/BDR-261118_2357-5.md) | 2026-11-19 | Fixtures réelles : photos locales, JSON committés | #fixtures #tests #vitest #git #vie-privee #debug | actif |
+| [BDR-261118_2357-5](decisions/BDR-261118_2357-5.md) | 2026-11-19 | Fixtures réelles : photos et JSON committés | #fixtures #tests #vitest #git #vie-privee #debug | actif |
