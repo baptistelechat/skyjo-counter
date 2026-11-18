@@ -1,5 +1,5 @@
 ---
-id: BLK-001
+id: ZBLK-001
 type: blocker
 date: 2026-11-18
 summary: "Build cassé : App.tsx template importait des assets supprimés"
