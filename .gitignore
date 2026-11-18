@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Obsidian vault
+**/.obsidian/
+.claude/memory/dashboard.md
+
+# Photos réelles prises au téléphone : restent en local (les tests n'utilisent que leurs JSON)
+# tests/fixtures/reel-*.jpg
+# tests/fixtures/reel-*.png

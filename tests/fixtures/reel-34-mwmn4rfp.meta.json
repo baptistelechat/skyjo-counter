@@ -1,0 +1,12 @@
+{
+  "attendu": 34,
+  "scoreLu": 36,
+  "tournee": false,
+  "date": "2026-11-18T21:35:54.213Z",
+  "attenduSaisi": 32,
+  "note": "Recompté sur la photo le 18/11/2026 : -2 + 5 + 10 + 11 + 7 + 0 + 3 + 0 = 34",
+  "image": [
+    3000,
+    4000
+  ]
+}
