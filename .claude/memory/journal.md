@@ -19,7 +19,35 @@ Les tests au téléphone ont été durs : chaque nouvelle photo révélait un ca
 
 **Entrées clés :**
 
-- [BLK-261118_2357-12](blockers/BLK-261118_2357-12.md) — « De pire en pire » : photos plus dures, pas régression
+- [ZBLK-261118_2357-12](archive/blockers/ZBLK-261118_2357-12.md) — « De pire en pire » : photos plus dures, pas régression
 - [BDR-261118_2357-3](decisions/BDR-261118_2357-3.md) — Recadrage auto de la grille si carte < 15 % de la photo
 - [BDR-261118_2357-1](decisions/BDR-261118_2357-1.md) — Cartes choisies par leur forme 2:3
-- [BLK-261118_2357-13](blockers/BLK-261118_2357-13.md) — Viseur maison : photos délavées, faux « bien cadré »
+- [ZBLK-261118_2357-13](archive/blockers/ZBLK-261118_2357-13.md) — Viseur maison : photos délavées, faux « bien cadré »
+---
+
+Session fiabilité du scan. On a d'abord vérifié pourquoi le temps réel est hors de portée. La démo webcam de Cactus est une boucle d'une image toutes les quelques secondes, sur le même WASM mono-thread que nous. Les latences de 74-107 ms sont mesurées en natif sur NPU. Une passe Mirage coûte ~10 s dans l'app, et les options `sections`/`fields` n'en gagnent qu'environ 1.
+
+Les 7 pistes de fiabilité ont ensuite été menées en deux vagues de sous-agents :
+
+- vérité terrain carte par carte et banc de mesure ;
+- confiance par carte et validation métier ;
+- consignes de prise de vue et badges « à vérifier » ;
+- couleur recalibrée avec les pixels (`jpeg-js` et `pngjs` en dev) ;
+- relecture des cartes douteuses et mosaïque.
+
+La mesure A/B réelle (ancienne version dans un worktree, onglet visible) a montré que la relecture des douteuses et la mosaïque rendaient le scan 21 % plus lent, avec un score faux de plus. Baptiste ne veut pas alourdir le traitement : retour à la relecture des seules illisibles (14,6 s contre 15,5 s, 144/144 cartes, 12/12 scores). La confiance a ensuite été recalibrée avec un plancher de 0,6 pour une lecture cohérente avec la couleur (fausses alertes 10 → 4). Tout est committé dans cf623a2. L'analyse progressive est confiée à une session séparée.
+
+**Entrées clés :**
+
+- [BDR-261119_2055-1](decisions/BDR-261119_2055-1.md) — Aucune passe Mirage en plus : relecture des seules illisibles
+- [BDR-261119_2055-2](decisions/BDR-261119_2055-2.md) — Confiance par carte : plancher 0,6 si cohérente avec la couleur
+- [LRN-261119_2055-7](learnings/LRN-261119_2055-7.md) — Gain estimé par un sous-agent : le mesurer en A/B avant de garder
+
+---
+
+Scan progressif (session lancée par la session principale) : `scanner()` accepte un callback `onProgression` qui émet la grille provisoire après chaque passe Mirage (1re lecture, passe recadrée ou tournée, relectures des illisibles). La page `/?debug` l'affiche avec une zone `aria-live` « Résultat provisoire… », un score grisé, puis marque « mise à jour » les cartes corrigées. Aucune passe ajoutée. Mesure A/B dans la même page sur les 12 fixtures : grilles finales identiques 12/12, même nombre de passes, temps non dégradé (264 s contre 222 s, bruit ±2× dû à une autre session active). 1re grille visible en 6 à 20 s au lieu de 11 à 46 s. react-doctor : un seul avertissement `async-defer-await`, faux positif (le test `fini` doit suivre l'`await`). vitest est resté bloqué 40 min chaîné derrière lint/build sous `rtk`, puis passé en 45 s lancé seul. Commit `dfcd5bc` poussé (le push a aussi emporté `cf623a2` de l'autre session).
+
+**Entrées clés :**
+
+- [BDR-261119_2132-1](decisions/BDR-261119_2132-1.md) — Scan progressif : callback onProgression, final inchangé
+- [BLK-261119_2132-2](blockers/BLK-261119_2132-2.md) — pnpm test chaîné : 40 min sans sortie
