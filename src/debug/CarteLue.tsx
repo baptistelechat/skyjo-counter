@@ -13,9 +13,10 @@ const FOND: Record<NonNullable<Couleur>, string> = {
 interface Props {
   carte: CarteVerif;
   defaussee: boolean;
+  maj: boolean; // valeur ou couleur changée depuis la 1re lecture
 }
 
-const CarteLue = ({ carte: c, defaussee }: Props): React.JSX.Element => {
+const CarteLue = ({ carte: c, defaussee, maj }: Props): React.JSX.Element => {
   const aVerifier = motifs(c);
   const texteOcr = `Textes OCR : ${c.textes.join(" · ") || "aucun"}`;
   return (
@@ -37,6 +38,11 @@ const CarteLue = ({ carte: c, defaussee }: Props): React.JSX.Element => {
       {aVerifier.length > 0 && (
         <span className="absolute -top-2 rounded-full bg-orange-500 px-1.5 text-[10px] font-semibold text-white no-underline">
           à vérifier
+        </span>
+      )}
+      {maj && (
+        <span className="absolute -bottom-2 rounded-full bg-blue-600 px-1.5 text-[10px] font-semibold text-white no-underline">
+          mise à jour
         </span>
       )}
       {c.valeur ?? (c.couleur === "dos" ? "?" : "⚠️")}

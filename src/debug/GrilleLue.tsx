@@ -6,9 +6,11 @@ interface Props {
   analyse: Analyse;
   photo: string;
   attendu?: number;
+  provisoire?: string; // libellé affiché tant que le scan continue
+  majs?: ReadonlySet<string>; // positions "ligne-colonne" mises à jour depuis la 1re lecture
 }
 
-const GrilleLue = ({ analyse, photo, attendu }: Props): React.JSX.Element => {
+const GrilleLue = ({ analyse, photo, attendu, provisoire, majs }: Props): React.JSX.Element => {
   const { cartes, score } = analyse;
   const ok = attendu === undefined ? null : attendu === score.total;
   // ponytail: compté ici avec les mêmes critères que les badges, plutôt que via analyse.aVerifier
@@ -45,12 +47,21 @@ const GrilleLue = ({ analyse, photo, attendu }: Props): React.JSX.Element => {
       </figure>
 
       <div className="space-y-3">
-        <p aria-live="polite" className="text-3xl font-bold">
-          Score : {score.total}
+        <p role="status" aria-live="polite" className="text-sm font-medium">
+          {provisoire ? (
+            <span className="text-blue-700">⏳ {provisoire}, la grille peut encore changer</span>
+          ) : (
+            <span className="text-green-700">
+              Résultat final{majs?.size ? ` · ${majs.size} carte(s) mise(s) à jour depuis la 1re lecture` : ""}
+            </span>
+          )}
+        </p>
+        <p aria-live="polite" className={`text-3xl font-bold ${provisoire ? "opacity-60" : ""}`}>
+          Score{provisoire ? " provisoire" : ""} : {score.total}
           {analyse.illisibles > 0 && (
             <span className="ml-2 text-orange-600">partiel</span>
           )}
-          {ok !== null && (
+          {ok !== null && !provisoire && (
             <span className={ok ? "ml-2 text-green-600" : "ml-2 text-red-600"}>
               {ok ? "✅" : `❌ attendu ${attendu}`}
             </span>
@@ -94,6 +105,7 @@ const GrilleLue = ({ analyse, photo, attendu }: Props): React.JSX.Element => {
                 key={`${l}-${col}`}
                 carte={c}
                 defaussee={score.defaussees.includes(col)}
+                maj={majs?.has(`${l}-${col}`) ?? false}
               />
             )),
           )}

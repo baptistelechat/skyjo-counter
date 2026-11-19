@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { versBlob } from "@/lib/image";
-import { getWorker, scanner } from "@/lib/moteur";
+import { versBlob, type ImageRGB } from "@/lib/image";
+import { getWorker, scanner, type Progression } from "@/lib/moteur";
 import {
   analyser as analyserGrille,
   type Analyse,
@@ -49,14 +49,38 @@ const comparer = (obtenu: MirageBrut, attendu: MirageBrut) => {
   };
 };
 
+const ETAPES: Record<Progression["etape"], string> = {
+  premiere: "1re lecture",
+  recadrage: "relecture recadrée",
+  relecture: "relecture des cartes illisibles",
+};
+
+// Positions dont la valeur ou la couleur a changé entre deux analyses.
+const changees = (avant: Analyse, apres: Analyse): string[] =>
+  apres.cartes.flatMap((ligne, l) =>
+    ligne.flatMap((c, col) => {
+      const a = avant.cartes[l]?.[col];
+      return a && a.valeur === c.valeur && a.couleur === c.couleur
+        ? []
+        : [`${l}-${col}`];
+    }),
+  );
+
+interface Vue {
+  analyse: Analyse;
+  photo: string;
+  attendu?: number;
+  provisoire?: string; // libellé tant que le scan n'est pas fini
+  majs: Set<string>; // cartes mises à jour depuis la 1re lecture
+  scan: number;
+}
+
+let numeroScan = 0;
+
 const MoteurTest = (): React.JSX.Element => {
   const [etat, setEtat] = useState("Chargement du moteur…");
   const [sortie, setSortie] = useState("");
-  const [vue, setVue] = useState<{
-    analyse: Analyse;
-    photo: string;
-    attendu?: number;
-  } | null>(null);
+  const [vue, setVue] = useState<Vue | null>(null);
   const [occupe, setOccupe] = useState(true);
   const [aEnregistrer, setAEnregistrer] = useState<React.ComponentProps<
     typeof EnregistrerFixture
@@ -88,9 +112,44 @@ const MoteurTest = (): React.JSX.Element => {
   ) => {
     setOccupe(true);
     setEtat("Analyse…");
+    const scan = ++numeroScan;
+    let fini = false;
+    // Une URL par image affichée, partagée entre résultats provisoires et final du même scan.
+    const urls = new Map<Blob | ImageRGB, Promise<string>>();
+    const url = (cle: Blob | ImageRGB) => {
+      let u = urls.get(cle);
+      if (!u) {
+        u = (cle instanceof Blob ? Promise.resolve(cle) : versBlob(cle)).then(
+          (b) => URL.createObjectURL(b),
+        );
+        urls.set(cle, u);
+      }
+      return u;
+    };
+    const montrer = async (
+      analyse: Analyse,
+      cle: Blob | ImageRGB,
+      provisoire?: string,
+    ) => {
+      const src = await url(cle);
+      if (provisoire && fini) return; // versBlob plus lent que la fin du scan
+      setVue((v) => {
+        if (v && v.photo !== src) URL.revokeObjectURL(v.photo);
+        const memeScan = v?.scan === scan;
+        const majs = new Set(memeScan ? v.majs : []);
+        if (memeScan) for (const p of changees(v.analyse, analyse)) majs.add(p);
+        return { analyse, photo: src, attendu, provisoire, majs, scan };
+      });
+    };
+    const progresser = ({ etape, analyse, image, passes, prevues }: Progression) => {
+      const libelle = `Résultat provisoire (${ETAPES[etape]}) · passe ${passes} sur ${prevues}${etape === "premiere" && prevues > 1 ? " au moins" : ""}`;
+      setEtat(`Analyse… ${libelle}`);
+      void montrer(analyse, etape === "premiere" ? photo : image, libelle);
+    };
     try {
       const { analyse, mirage, image, tournee, recadrage, relues, ms } =
-        await scanner(photo);
+        await scanner(photo, Infinity, progresser);
+      fini = true;
       const { rgba, width, height } = image;
       const python = reference
         ? analyserGrille(reference as unknown as Mirage, rgba, width, height)
@@ -107,21 +166,18 @@ const MoteurTest = (): React.JSX.Element => {
           .filter(Boolean)
           .join(" · "),
       );
-      const affichee = tournee || recadrage ? await versBlob(image) : photo;
+      await montrer(analyse, tournee || recadrage ? image : photo);
       setAEnregistrer(
         photo instanceof File
           ? { photo, wasm: mirage, tournee, recadrage, image: [image.width, image.height], scoreLu: analyse.score.total }
           : null,
       );
-      setVue((v) => {
-        if (v) URL.revokeObjectURL(v.photo);
-        return { analyse, photo: URL.createObjectURL(affichee), attendu };
-      });
       const resultat = reference
         ? { comparaison: comparer(mirage as MirageBrut, reference), mirage }
         : mirage;
       setSortie(JSON.stringify(resultat, null, 2));
     } catch (err) {
+      fini = true;
       setEtat(`Erreur : ${String(err)}`);
     } finally {
       setOccupe(false);

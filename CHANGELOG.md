@@ -15,6 +15,7 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - Boutons « Photo » (appareil photo) et « Galerie » adaptés au téléphone
 - Badge « à vérifier » sur chaque carte douteuse, avec le motif : lecture peu sûre, valeur incompatible avec la couleur, plus d'exemplaires que dans le paquet, colonne presque défaussée ; résumé du nombre de cartes à vérifier en haut de la grille
 - Consignes de prise de vue près du choix de photo (de face, assez près, sans reflet, cartes un peu écartées, appareil photo natif)
+- Grille et score provisoires affichés dès la première lecture, puis affinés au fil des relectures, avec les cartes corrigées marquées « mise à jour » (sans allonger le scan)
 
 ### Fixed
 
