@@ -25,6 +25,7 @@ export interface Scan {
   tournee: boolean
   recadrage: Boite | null // zone de la photo d'origine analysée en 2e passe (grille trop petite)
   relues: number // cartes illisibles relues avec succès sur un recadrage
+  passes: number // passes Mirage effectuées
   ms: number
 }
 
@@ -33,6 +34,7 @@ export interface Scan {
 export const scanner = async (photo: Blob, max = Infinity): Promise<Scan> => {
   let image = await versRGB(photo, max)
   let { mirage, ms } = await decrire(image)
+  let passes = 1
   const tournee = cartesCouchees(mirage, image.width, image.height)
   // Grille petite dans la photo : Mirage réduit l'image entière, les cartes n'ont plus assez de pixels.
   // On recadre sur la grille (et on tourne si les cartes sont couchées) avant une seule 2e passe.
@@ -45,6 +47,7 @@ export const scanner = async (photo: Blob, max = Infinity): Promise<Scan> => {
     const second = await decrire(image)
     mirage = second.mirage
     ms += second.ms
+    passes++
   }
   let analyse = analyser(mirage, image.rgba, image.width, image.height)
 
@@ -62,6 +65,7 @@ export const scanner = async (photo: Blob, max = Infinity): Promise<Scan> => {
       }
       const passe = await decrire(recadrer(image, c.boite))
       ms += passe.ms
+      passes++
       const relue = relire(c, passe.mirage.text)
       if (relue.relue) relues++
       nouvelle.push(relue)
@@ -70,5 +74,5 @@ export const scanner = async (photo: Blob, max = Infinity): Promise<Scan> => {
   }
   if (relues) analyse = resumer(cartes)
 
-  return { analyse, mirage, image, tournee, recadrage, relues, ms }
+  return { analyse, mirage, image, tournee, recadrage, relues, passes, ms }
 }

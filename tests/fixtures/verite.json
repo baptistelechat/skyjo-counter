@@ -1,0 +1,106 @@
+{
+  "grille-moins1": {
+    "grille": [
+      [null, null, null, 9],
+      [0, null, null, 9],
+      [null, null, -1, 9]
+    ],
+    "doutes": []
+  },
+  "grille-21": {
+    "grille": [
+      [8, 0, 10, 1],
+      [null, 3, 10, 0],
+      [8, -1, 10, 2]
+    ],
+    "doutes": [
+      "l1 : rangée du fond en perspective, cartes à l'envers ; lecture sûre (couleurs + coins)"
+    ]
+  },
+  "grille-6": {
+    "grille": [
+      [null, 7, null, 0],
+      [null, null, -1, null],
+      [0, null, null, null]
+    ],
+    "doutes": []
+  },
+  "reel-34-mwmn4rfp": {
+    "grille": [
+      [-2, 5, null, 10],
+      [11, null, 7, 0],
+      [null, null, 3, 0]
+    ],
+    "doutes": []
+  },
+  "reel-48-mwmloid8": {
+    "grille": [
+      [8, null, null, 12],
+      [null, null, 12, null],
+      [null, 6, null, 10]
+    ],
+    "doutes": [
+      "photo floue (bougé) ; même grille que les 3 autres reel-48, lecture sûre"
+    ]
+  },
+  "reel-48-mwmlptxh": {
+    "grille": [
+      [8, null, null, 12],
+      [null, null, 12, null],
+      [null, 6, null, 10]
+    ],
+    "doutes": []
+  },
+  "reel-48-mwmlrnvn": {
+    "grille": [
+      [8, null, null, 12],
+      [null, null, 12, null],
+      [null, 6, null, 10]
+    ],
+    "doutes": []
+  },
+  "reel-48-mwmmakzd": {
+    "grille": [
+      [8, null, null, 12],
+      [null, null, 12, null],
+      [null, 6, null, 10]
+    ],
+    "doutes": []
+  },
+  "reel-61-mwmo01e1": {
+    "grille": [
+      [1, 11, -1, 11],
+      [6, 0, -1, 8],
+      [9, 8, -1, 7]
+    ],
+    "doutes": [
+      "photo en paysage (4000 x 3000), cartes couchées : grille orientée comme la lit le joueur (photo tournée de 90° horaire). meta.tournee = true et le JSON Mirage porte sur l'image redressée, dans cette même orientation (vérifié sur les positions des textes)"
+    ]
+  },
+  "reel-61-mwmoejrg": {
+    "grille": [
+      [1, 11, -1, 11],
+      [6, 0, -1, 8],
+      [9, 8, -1, 7]
+    ],
+    "doutes": []
+  },
+  "reel-61-mwmozhev": {
+    "grille": [
+      [1, 11, -1, 11],
+      [6, 0, -1, 8],
+      [9, 8, -1, 7]
+    ],
+    "doutes": [
+      "meta.recadrage : le JSON porte sur la grille recadrée (1833 x 2296), même orientation"
+    ]
+  },
+  "reel-66-mwmmd09y": {
+    "grille": [
+      [null, 7, 11, null],
+      [11, null, 12, null],
+      [9, 6, null, 10]
+    ],
+    "doutes": []
+  }
+}

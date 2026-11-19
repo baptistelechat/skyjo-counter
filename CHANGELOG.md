@@ -13,3 +13,9 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - Lecture fiable sur de vraies photos de téléphone : grille penchée ou pivotée, cartes collées, grille petite dans la photo (recadrage automatique), chiffres partiellement lus (relecture de la carte recadrée)
 - Signalement des cartes visibles dont le chiffre n'a pas pu être lu, avec un score marqué « partiel »
 - Boutons « Photo » (appareil photo) et « Galerie » adaptés au téléphone
+- Badge « à vérifier » sur chaque carte douteuse, avec le motif : lecture peu sûre, valeur incompatible avec la couleur, plus d'exemplaires que dans le paquet, colonne presque défaussée ; résumé du nombre de cartes à vérifier en haut de la grille
+- Consignes de prise de vue près du choix de photo (de face, assez près, sans reflet, cartes un peu écartées, appareil photo natif)
+
+### Fixed
+
+- Couleur des cartes reconnue sur les photos délavées, ce qui évite de mal lire un chiffre partiel (« 2 » sur une carte rouge = 12)

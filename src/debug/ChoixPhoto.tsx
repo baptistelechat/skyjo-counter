@@ -1,6 +1,7 @@
 import { Camera, ImagePlus } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ConsignesPhoto from "./ConsignesPhoto";
 
 interface Props {
   disabled: boolean;
@@ -25,7 +26,9 @@ const ChoixPhoto = ({ disabled, onPhoto }: Props): React.JSX.Element => {
     );
 
   return (
-    <div className="grid w-full max-w-md grid-cols-2 gap-3">
+    <div className="flex w-full max-w-md flex-col items-center gap-3">
+    <ConsignesPhoto />
+    <div className="grid w-full grid-cols-2 gap-3">
       <label className={bouton("default")}>
         <Camera aria-hidden="true" />
         Photo
@@ -43,6 +46,10 @@ const ChoixPhoto = ({ disabled, onPhoto }: Props): React.JSX.Element => {
         Galerie
         <input type="file" accept="image/*" className="sr-only" disabled={disabled} onChange={choisir} />
       </label>
+    </div>
+    <p className="text-xs text-muted-foreground">
+      Préfère « Photo » : l'appareil natif garde les vraies couleurs, dont dépend la lecture.
+    </p>
     </div>
   );
 };

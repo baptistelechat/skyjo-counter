@@ -1,14 +1,6 @@
-import type { Couleur } from "@/lib/skyjo/couleur";
 import type { Analyse } from "@/lib/skyjo";
-
-const FOND: Record<NonNullable<Couleur>, string> = {
-  rouge: "bg-red-600 text-white",
-  jaune: "bg-yellow-400 text-black",
-  vert: "bg-green-600 text-white",
-  "bleu clair": "bg-cyan-300 text-black",
-  "bleu foncé": "bg-blue-900 text-white",
-  dos: "bg-[conic-gradient(red,yellow,lime,cyan,blue,magenta,red)] text-white",
-};
+import { motifs, type CarteVerif } from "./aVerifier";
+import CarteLue from "./CarteLue";
 
 interface Props {
   analyse: Analyse;
@@ -19,6 +11,13 @@ interface Props {
 const GrilleLue = ({ analyse, photo, attendu }: Props): React.JSX.Element => {
   const { cartes, score } = analyse;
   const ok = attendu === undefined ? null : attendu === score.total;
+  // ponytail: compté ici avec les mêmes critères que les badges, plutôt que via analyse.aVerifier
+  const aVerifier = cartes.flatMap((ligne, l) =>
+    ligne.flatMap((c: CarteVerif, col) => {
+      const m = motifs(c);
+      return m.length ? [{ position: `ligne ${l + 1}, colonne ${col + 1}`, motifs: m }] : [];
+    }),
+  );
   return (
     <section className="grid gap-4 md:grid-cols-2">
       <figure className="relative">
@@ -63,12 +62,24 @@ const GrilleLue = ({ analyse, photo, attendu }: Props): React.JSX.Element => {
           {score.defaussees.length > 0 &&
             ` · colonne(s) ${score.defaussees.map((c) => c + 1).join(", ")} défaussée(s)`}
         </p>
-        {analyse.illisibles > 0 && (
-          <p role="alert" className="text-sm font-medium text-orange-600">
-            ⚠️ {analyse.illisibles} carte(s) non détectée(s) ou sans chiffre lu,
-            comptée(s) 0 : à corriger à la main (E3)
-          </p>
-        )}
+        <div aria-live="polite" className="text-sm">
+          {aVerifier.length === 0 ? (
+            <p className="text-green-700">Toutes les cartes semblent bien lues.</p>
+          ) : (
+            <>
+              <p className="font-medium text-orange-600">
+                ⚠️ {aVerifier.length} carte{aVerifier.length > 1 ? "s" : ""} à vérifier
+              </p>
+              <ul className="list-disc pl-5 text-muted-foreground">
+                {aVerifier.map(({ position, motifs }) => (
+                  <li key={position}>
+                    {position} : {motifs.join(" ; ")}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
         <div
           role="table"
           aria-label="Grille lue"
@@ -79,28 +90,16 @@ const GrilleLue = ({ analyse, photo, attendu }: Props): React.JSX.Element => {
         >
           {cartes.flatMap((ligne, l) =>
             ligne.map((c, col) => (
-              <div
+              <CarteLue
                 key={`${l}-${col}`}
-                role="cell"
-                title={`Textes OCR : ${c.textes.join(" · ") || "aucun"}`}
-                className={`flex aspect-[2/3] flex-col items-center justify-center rounded-lg text-2xl font-bold shadow ${
-                  c.couleur ? FOND[c.couleur] : "bg-muted"
-                } ${score.defaussees.includes(col) ? "line-through opacity-40" : ""} ${
-                  c.valeur === null && c.couleur !== "dos"
-                    ? "ring-4 ring-orange-500"
-                    : ""
-                }`}
-              >
-                {c.valeur ?? (c.couleur === "dos" ? "?" : "⚠️")}
-                <span className="text-[10px] font-normal opacity-80">
-                  {c.boite ? (c.couleur ?? "couleur ?") : "non détectée"}
-                </span>
-              </div>
+                carte={c}
+                defaussee={score.defaussees.includes(col)}
+              />
             )),
           )}
         </div>
         <p className="text-xs text-muted-foreground">
-          Survole une carte pour voir les textes OCR qu'elle contient.
+          Survole une carte pour voir les textes OCR et les alertes.
         </p>
       </div>
     </section>

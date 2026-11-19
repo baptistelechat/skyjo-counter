@@ -1,7 +1,8 @@
 import createCactus, { type CactusModule } from "../vendor/cactus.js";
 import { parseMirage } from "../lib/json";
 
-export type WorkerRequest = { rgb: Uint8Array; width: number; height: number };
+// options : JSON passé à cactus_describe (sections/champs à produire).
+export type WorkerRequest = { rgb: Uint8Array; width: number; height: number; options?: string };
 export type WorkerResponse =
   | { type: "ready"; ms: number }
   | { type: "result"; mirage: unknown; ms: number }
@@ -11,6 +12,8 @@ const WASM_URL = "/cactus/cactus.wasm";
 const MODEL_URL = "/models/mirage.cact";
 const OUT_CAP = 16 * 1024 * 1024; // même taille que le buffer Python
 const CACTUS_VISION = 4;
+// Seuls objects (bbox) et text (string, bbox, score) sont lus par l'app : ~1 s de moins par passe que "{}".
+const OPTIONS_DEFAUT = JSON.stringify({ sections: ["objects", "text"], fields: ["bbox", "score"] });
 
 let M: CactusModule;
 let outPtr = 0;
@@ -51,11 +54,11 @@ async function init() {
   post({ type: "ready", ms: performance.now() - t0 });
 }
 
-function describe({ rgb, width, height }: WorkerRequest) {
+function describe({ rgb, width, height, options = OPTIONS_DEFAUT }: WorkerRequest) {
   const t0 = performance.now();
   const rgbPtr = M._malloc(rgb.length);
   M.HEAPU8.set(rgb, rgbPtr);
-  const optionsPtr = writeString("{}");
+  const optionsPtr = writeString(options);
   const code = M._cactus_describe(
     rgbPtr,
     width,
