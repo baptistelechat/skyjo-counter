@@ -16,3 +16,5 @@ register: decisions
 | [BDR-261119_2055-2](decisions/BDR-261119_2055-2.md) | 2026-11-19 | Confiance par carte : plancher 0,6 si cohérente avec la couleur | #confiance #couleur #ocr #validation #calibration #skyjo | actif |
 | [BDR-261119_2055-3](decisions/BDR-261119_2055-3.md) | 2026-11-19 | Vérité terrain carte par carte et banc avec pixels | #fixtures #verite-terrain #banc #vitest #jpeg-js #mesure | actif |
 | [BDR-261119_2132-1](decisions/BDR-261119_2132-1.md) | 2026-11-19 | Scan progressif : callback onProgression, final inchangé | #mirage #scanner #progression #ux #attente #callback | actif |
+| [BDR-261119_2231-1](decisions/BDR-261119_2231-1.md) | 2026-11-19 | Vitesse : option A pour le MVP, B et C documentées | #vitesse #mirage #cactus #pwa #capacitor #onnx | actif |
+| [BDR-261119_2231-2](decisions/BDR-261119_2231-2.md) | 2026-11-19 | Partie : grilles saisies par joueur, score figé à la validation | #zustand #indexeddb #partie #grille #score #skyjo | actif |

@@ -50,4 +50,16 @@ Scan progressif (session lancée par la session principale) : `scanner()` accept
 **Entrées clés :**
 
 - [BDR-261119_2132-1](decisions/BDR-261119_2132-1.md) — Scan progressif : callback onProgression, final inchangé
-- [BLK-261119_2132-2](blockers/BLK-261119_2132-2.md) — pnpm test chaîné : 40 min sans sortie
+- [ZBLK-261119_2132-2](archive/blockers/ZBLK-261119_2132-2.md) — pnpm test chaîné : 40 min sans sortie
+
+
+---
+
+Point d'avancement sur les épics (E1 et E2 finis, E3 et E4 non commencés), puis épics mis à jour (E2-S6 cochée, travail du 19/11 documenté). Analyse de la vitesse de Mirage : Cactus est rapide en natif (NEON, multi-cœurs, NPU), mais le seul build WASM publié est mono-thread, sans WebGPU, et le moteur C est fermé, donc pas de recompilation possible. Trois options rédigées dans `docs/vitesse-options.md` : A (assumer l'attente) retenue pour le MVP, B (app native Capacitor) et C (pipeline spécialisé ONNX) gardées pour plus tard.
+
+Implémentation d'E3 S1 à S6 : store de partie Zustand persisté dans IndexedDB, écrans nouvelle partie / manche / saisie joueur / tableau des scores, grille éditable avec dialog de correction, progression du téléchargement du modèle depuis le worker. Bug latent corrigé : les passes Mirage sont mises en file, un scan lancé pendant un autre récupérait la réponse du précédent. Composants photo et couleurs sortis de `debug/` pour être partagés. Vérifié dans Chrome (scan reel-48 → 48 en 13 s, rechargement sans perte), 58 tests verts, puis testé par Baptiste. Commit `0e3ed7a` poussé. Reste E3-S7 (mesures sur 2 téléphones) puis E4.
+
+**Entrées clés :**
+
+- [BDR-261119_2231-1](decisions/BDR-261119_2231-1.md) — Vitesse : option A pour le MVP, B et C documentées
+- [BDR-261119_2231-2](decisions/BDR-261119_2231-2.md) — Partie : grilles saisies par joueur, score figé à la validation
