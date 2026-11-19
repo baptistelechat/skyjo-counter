@@ -3,11 +3,50 @@ import { analyser, estIllisible, relire, resumer, type Analyse, type Mirage } fr
 import { cartesCouchees, largeurCarte, zoneGrille, type Boite } from '@/lib/skyjo/grille'
 import type { WorkerResponse } from '@/worker/cactus.worker'
 
-let worker: Worker | undefined
-export const getWorker = (): Worker =>
-  (worker ??= new Worker(new URL('../worker/cactus.worker.ts', import.meta.url), { type: 'module' }))
+// État du chargement moteur + modèle, suivi par l'écran de chargement (useSyncExternalStore).
+export interface Chargement {
+  pret: boolean
+  recu: number // octets du modèle reçus
+  total: number // 0 : taille inconnue
+  erreur?: string
+}
+let chargement: Chargement = { pret: false, recu: 0, total: 0 }
+const abonnes = new Set<() => void>()
+const majChargement = (c: Partial<Chargement>) => {
+  chargement = { ...chargement, ...c }
+  for (const f of abonnes) f()
+}
+export const etatChargement = (): Chargement => chargement
+export const suivreChargement = (f: () => void): (() => void) => {
+  getWorker()
+  abonnes.add(f)
+  return () => abonnes.delete(f)
+}
 
-const decrire = ({ rgb, width, height }: ImageRGB): Promise<{ mirage: Mirage; ms: number }> =>
+let worker: Worker | undefined
+export const getWorker = (): Worker => {
+  if (worker) return worker
+  worker = new Worker(new URL('../worker/cactus.worker.ts', import.meta.url), { type: 'module' })
+  // addEventListener : ne gêne pas onmessage, réassigné par decrire() et la page de debug.
+  worker.addEventListener('message', (e: MessageEvent<WorkerResponse>) => {
+    const d = e.data
+    if (d.type === 'progress') majChargement({ recu: d.recu, total: d.total })
+    else if (d.type === 'ready') majChargement({ pret: true })
+    else if (d.type === 'error' && !chargement.pret) majChargement({ erreur: d.message })
+  })
+  return worker
+}
+
+// Worker unique, réponses sans identifiant : les passes sont mises en file pour qu'un scan lancé pendant
+// un autre (joueur suivant, retour arrière) ne récupère pas la réponse du précédent.
+let file: Promise<unknown> = Promise.resolve()
+const decrire = (image: ImageRGB): Promise<{ mirage: Mirage; ms: number }> => {
+  const passe = file.then(() => decrireMaintenant(image))
+  file = passe.catch(() => undefined)
+  return passe
+}
+
+const decrireMaintenant = ({ rgb, width, height }: ImageRGB): Promise<{ mirage: Mirage; ms: number }> =>
   new Promise((resolve, reject) => {
     const w = getWorker()
     w.onmessage = (e: MessageEvent<WorkerResponse>) => {

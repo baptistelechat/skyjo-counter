@@ -16,6 +16,10 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - Badge « à vérifier » sur chaque carte douteuse, avec le motif : lecture peu sûre, valeur incompatible avec la couleur, plus d'exemplaires que dans le paquet, colonne presque défaussée ; résumé du nombre de cartes à vérifier en haut de la grille
 - Consignes de prise de vue près du choix de photo (de face, assez près, sans reflet, cartes un peu écartées, appareil photo natif)
 - Grille et score provisoires affichés dès la première lecture, puis affinés au fil des relectures, avec les cartes corrigées marquées « mise à jour » (sans allonger le scan)
+- Partie complète jouable : création d'une partie de 2 à 8 joueurs, scan ou saisie manuelle de la grille de chaque joueur, tableau des scores cumulés par manche, fin de partie à 100 points et gagnant affiché (ex æquo gérés)
+- Correction d'une carte d'un tap (choix de -2 à 12 ou dos), score recalculé en direct, nombre de colonnes réglable quand une colonne a été défaussée en cours de manche
+- Partie conservée sur l'appareil : un rechargement de page ou une fermeture de l'onglet ne fait rien perdre, même hors ligne
+- Barre de progression du téléchargement du modèle de lecture au premier lancement ; la saisie à la main reste possible pendant le chargement
 
 ### Fixed
 

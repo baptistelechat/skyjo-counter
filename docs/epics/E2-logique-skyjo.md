@@ -9,7 +9,7 @@
 - [x] **E2-S3 — Lecture OCR** : `lecture.ts` (O→0, I→1, lectures retournées, 6↔9 hors famille, vote pondéré, le moins l'emporte).
 - [x] **E2-S4 — Score** : `score.ts` (colonnes défaussées, somme des visibles, nb de cachées).
 - [x] **E2-S5 — Pipeline** : `analyser(mirage, rgba, w, h)` → `{ grille, familles, score }`, une seule fonction appelée par l'UI.
-- [ ] **E2-S6 — Fixtures** : `tests/fixtures/` avec les 3 JSON + RGBA des photos POC ; un test par photo (grille + score attendus).
+- [x] **E2-S6 — Fixtures** : `tests/fixtures/` avec les 3 JSON POC + 9 photos réelles (`reel-*`) et `verite.json` (vérité terrain carte par carte) ; pixels décodés par `pngjs`/`jpeg-js` (`tests/pixels.ts`). ✅ 52/52 tests verts (`banc`, `reel`, `confiance`, `couleur`, `grille`, `orientation`).
 
 ## Avancement (18/11/2026)
 
@@ -78,6 +78,17 @@ Mirage nomme les cartes au hasard (« patch », « tile », « sticky note », �
 
 **Validation en analyse réelle (Mirage + rotation + recadrage + relecture) sur les 12 photos : 12/12 ✅**, de 6 à 24 s par photo (recadrage sur 5 photos, rotation sur 1, relecture d'une carte sur 3).
 
+### Confiance et cartes douteuses (19/11/2026)
+
+- Chaque carte porte une **confiance** et des alertes (`lecture.ts`, `validation.ts`) : couleur incohérente avec la valeur, nombre de cartes impossible dans le paquet, colonne presque défaussée. Plancher de cohérence couleur à 0,6. La page de debug affiche des badges « à vérifier » et des consignes photo.
+- `familleCarte` (`couleur.ts`) recalibrée sur les 12 photos avec une saturation relative, pour les photos délavées.
+- Le worker ne demande plus à Mirage que `objects` + `text` (~1 s de moins par passe).
+- Décision : **aucune passe Mirage en plus** pour les cartes douteuses (A/B mesuré : +21 % de temps et un 12 lu 11). Seules les cartes illisibles sont relues.
+
+### Affichage progressif (19/11/2026)
+
+`scanner(photo, max, onProgression)` envoie la grille provisoire après chaque passe Mirage (1re lecture en 6-20 s), le résultat final ne change pas. La page de debug l'affiche dans une zone `aria-live` et marque les cartes mises à jour. 12/12 grilles finales identiques, temps non dégradé.
+
 ## Critère d'acceptation
 
-`pnpm test` vert : 3/3 scores exacts, 36/36 familles de couleur.
+`pnpm test` vert : 3/3 scores exacts, 36/36 familles de couleur. ✅ Dépassé : 12/12 scores exacts, 144/144 cartes.

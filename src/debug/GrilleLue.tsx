@@ -1,5 +1,5 @@
 import type { Analyse } from "@/lib/skyjo";
-import { motifs, type CarteVerif } from "./aVerifier";
+import { motifs, type CarteVerif } from "@/lib/aVerifier";
 import CarteLue from "./CarteLue";
 
 interface Props {

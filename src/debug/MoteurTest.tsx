@@ -7,7 +7,7 @@ import {
   type Analyse,
   type Mirage,
 } from "@/lib/skyjo";
-import ChoixPhoto from "./ChoixPhoto";
+import ChoixPhoto from "@/components/photo/ChoixPhoto";
 import EnregistrerFixture from "./EnregistrerFixture";
 import GrilleLue from "./GrilleLue";
 import type { WorkerResponse } from "@/worker/cactus.worker";

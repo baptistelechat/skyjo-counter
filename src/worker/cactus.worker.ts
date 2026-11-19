@@ -4,6 +4,7 @@ import { parseMirage } from "../lib/json";
 // options : JSON passé à cactus_describe (sections/champs à produire).
 export type WorkerRequest = { rgb: Uint8Array; width: number; height: number; options?: string };
 export type WorkerResponse =
+  | { type: "progress"; recu: number; total: number } // téléchargement du modèle (total 0 : inconnu)
   | { type: "ready"; ms: number }
   | { type: "result"; mirage: unknown; ms: number }
   | { type: "error"; message: string };
@@ -29,19 +30,38 @@ function writeString(s: string) {
 }
 
 // Un 404 (fichier absent du déploiement) donnerait sinon une erreur WASM incompréhensible.
-const telecharger = async (url: string): Promise<ArrayBuffer> => {
+// suivre : envoie la progression à la page (modèle de ~21 Mo, long au premier lancement).
+const telecharger = async (url: string, suivre = false): Promise<Uint8Array> => {
   const r = await fetch(url);
   if (!r.ok)
     throw new Error(`Téléchargement de ${url} impossible (HTTP ${r.status})`);
-  return r.arrayBuffer();
+  if (!suivre || !r.body) return new Uint8Array(await r.arrayBuffer());
+  const total = Number(r.headers.get("content-length")) || 0;
+  const morceaux: Uint8Array[] = [];
+  let recu = 0;
+  const lecteur = r.body.getReader();
+  for (;;) {
+    const { done, value } = await lecteur.read();
+    if (done) break;
+    morceaux.push(value);
+    recu += value.length;
+    post({ type: "progress", recu, total });
+  }
+  const tout = new Uint8Array(recu);
+  let i = 0;
+  for (const m of morceaux) {
+    tout.set(m, i);
+    i += m.length;
+  }
+  return tout;
 };
 
 async function init() {
   const t0 = performance.now();
   // cactus.js ignore locateFile (il cherche le .wasm à côté du worker) : on lui passe le binaire.
-  const wasmBinary = await telecharger(WASM_URL);
+  const wasmBinary = (await telecharger(WASM_URL)).buffer as ArrayBuffer;
   M = await createCactus({ wasmBinary });
-  const cact = new Uint8Array(await telecharger(MODEL_URL));
+  const cact = await telecharger(MODEL_URL, true);
   const modelPtr = M._malloc(cact.length);
   M.HEAPU8.set(cact, modelPtr);
   const code = M._cactus_load(modelPtr, BigInt(cact.length)); // n est un unsigned long long
