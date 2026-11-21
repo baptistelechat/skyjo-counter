@@ -23,6 +23,10 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - App installable sur l'écran d'accueil (PWA) et utilisable en mode avion après une première visite : l'app et le modèle de lecture restent en cache, le modèle n'est téléchargé qu'une fois
 - Identité visuelle « Carnet » : icône (carte au S d'afficheur de score), couleurs encre et papier, polices manuscrite et très lisible, disponibles hors ligne
 - Aperçu illustré quand on partage le lien de l'app
+- Historique des parties, terminées ou abandonnées, gardé sur l'appareil : liste du plus récent au plus ancien, gagnant·e·s, tableau des scores en lecture seule, suppression d'une partie
+- Statistiques par joueur : victoires et taux de victoire, score moyen par manche, meilleure et pire manche, nombre moyen de manches par partie (les manches d'une partie abandonnée comptent, pas ses victoires)
+- Prénoms déjà joués proposés à la création d'une partie
+- Export de l'historique en fichier JSON et réimport (changement de téléphone, sauvegarde), sans doublon
 
 ### Changed
 
