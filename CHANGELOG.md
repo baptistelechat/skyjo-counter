@@ -20,6 +20,13 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - Correction d'une carte d'un tap (choix de -2 à 12 ou dos), score recalculé en direct, nombre de colonnes réglable quand une colonne a été défaussée en cours de manche
 - Partie conservée sur l'appareil : un rechargement de page ou une fermeture de l'onglet ne fait rien perdre, même hors ligne
 - Barre de progression du téléchargement du modèle de lecture au premier lancement ; la saisie à la main reste possible pendant le chargement
+- App installable sur l'écran d'accueil (PWA) et utilisable en mode avion après une première visite : l'app et le modèle de lecture restent en cache, le modèle n'est téléchargé qu'une fois
+- Identité visuelle « Carnet » : icône (carte au S d'afficheur de score), couleurs encre et papier, polices manuscrite et très lisible, disponibles hors ligne
+- Aperçu illustré quand on partage le lien de l'app
+
+### Changed
+
+- L'accueil présente l'app comme un compteur de points pour toute la partie, la photo de la grille devenant un raccourci de saisie
 
 ### Fixed
 

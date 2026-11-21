@@ -6,6 +6,7 @@ import { defineConfig, type Plugin } from "vite";
 import checker from "vite-plugin-checker";
 import mkcert from "vite-plugin-mkcert";
 import { qrcode } from "vite-plugin-qrcode";
+import { VitePWA } from "vite-plugin-pwa";
 
 interface FixtureRequest {
   nom: string;
@@ -94,6 +95,17 @@ export default defineConfig({
     qrcode(),
     mkcert(),
     fixtures(),
+    // Le SW ne précache que l'app : moteur et modèle (21 Mo) sont mis en cache par le worker
+    // lui-même (src/worker/cactus.worker.ts), pour ne pas les télécharger deux fois.
+    VitePWA({
+      registerType: "autoUpdate",
+      manifest: false, // manifest statique dans public/ (visible dès pnpm dev)
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest}"],
+        globIgnores: ["**/models/**", "**/cactus/**", "og-image.png"],
+        navigateFallbackDenylist: [/^\/__fixtures/],
+      },
+    }),
   ],
   resolve: { alias: { "@": path.resolve(import.meta.dirname, "./src") } },
   server: { host: true },

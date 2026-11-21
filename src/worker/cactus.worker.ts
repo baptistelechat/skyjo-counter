@@ -2,7 +2,12 @@ import createCactus, { type CactusModule } from "../vendor/cactus.js";
 import { parseMirage } from "../lib/json";
 
 // options : JSON passé à cactus_describe (sections/champs à produire).
-export type WorkerRequest = { rgb: Uint8Array; width: number; height: number; options?: string };
+export type WorkerRequest = {
+  rgb: Uint8Array;
+  width: number;
+  height: number;
+  options?: string;
+};
 export type WorkerResponse =
   | { type: "progress"; recu: number; total: number } // téléchargement du modèle (total 0 : inconnu)
   | { type: "ready"; ms: number }
@@ -14,7 +19,10 @@ const MODEL_URL = "/models/mirage.cact";
 const OUT_CAP = 16 * 1024 * 1024; // même taille que le buffer Python
 const CACTUS_VISION = 4;
 // Seuls objects (bbox) et text (string, bbox, score) sont lus par l'app : ~1 s de moins par passe que "{}".
-const OPTIONS_DEFAUT = JSON.stringify({ sections: ["objects", "text"], fields: ["bbox", "score"] });
+const OPTIONS_DEFAUT = JSON.stringify({
+  sections: ["objects", "text"],
+  fields: ["bbox", "score"],
+});
 
 let M: CactusModule;
 let outPtr = 0;
@@ -29,12 +37,44 @@ function writeString(s: string) {
   return ptr;
 }
 
+// Moteur + modèle gardés dans le Cache API après le premier téléchargement : l'app marche ensuite
+// en mode avion, sans que le service worker retélécharge 21 Mo en parallèle (précache évité).
+// Changer le nom à chaque nouvelle version du moteur ou du modèle.
+const CACHE_MODELE = "skyjo-modele-cactus-4.1.4";
+
+const ouvrirCache = async (): Promise<Cache | null> => {
+  try {
+    return "caches" in self ? await caches.open(CACHE_MODELE) : null;
+  } catch {
+    return null; // navigation privée ou stockage refusé : on retélécharge à chaque lancement
+  }
+};
+
 // Un 404 (fichier absent du déploiement) donnerait sinon une erreur WASM incompréhensible.
 // suivre : envoie la progression à la page (modèle de ~21 Mo, long au premier lancement).
-const telecharger = async (url: string, suivre = false): Promise<Uint8Array> => {
-  const r = await fetch(url);
+const telecharger = async (
+  url: string,
+  suivre = false,
+): Promise<Uint8Array<ArrayBuffer>> => {
+  const cache = await ouvrirCache();
+  const enCache = await cache?.match(url);
+  const r = enCache ?? (await fetch(url));
   if (!r.ok)
     throw new Error(`Téléchargement de ${url} impossible (HTTP ${r.status})`);
+  const octets = await lire(r, suivre);
+  if (!enCache && cache)
+    await cache
+      .put(
+        url,
+        new Response(octets, {
+          headers: { "content-length": String(octets.length) },
+        }),
+      )
+      .catch(() => undefined); // quota dépassé : l'app marche, sans le hors-ligne
+  return octets;
+};
+
+const lire = async (r: Response, suivre: boolean): Promise<Uint8Array<ArrayBuffer>> => {
   if (!suivre || !r.body) return new Uint8Array(await r.arrayBuffer());
   const total = Number(r.headers.get("content-length")) || 0;
   const morceaux: Uint8Array[] = [];
@@ -74,7 +114,12 @@ async function init() {
   post({ type: "ready", ms: performance.now() - t0 });
 }
 
-function describe({ rgb, width, height, options = OPTIONS_DEFAUT }: WorkerRequest) {
+function describe({
+  rgb,
+  width,
+  height,
+  options = OPTIONS_DEFAUT,
+}: WorkerRequest) {
   const t0 = performance.now();
   const rgbPtr = M._malloc(rgb.length);
   M.HEAPU8.set(rgb, rgbPtr);

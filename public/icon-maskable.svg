@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><title>Skyjo Scan (maskable)</title><defs><pattern id="pmin" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="#fff" stroke-width="1" opacity=".14"/></pattern><pattern id="pmaj" width="64" height="64" patternUnits="userSpaceOnUse"><rect width="64" height="64" fill="url(#pmin)"/><path d="M64 0H0V64" fill="none" stroke="#fff" stroke-width="2" opacity=".22"/></pattern></defs><rect width="512" height="512" fill="#1d3fbf"/><rect width="512" height="512" fill="url(#pmaj)"/><path d="M92 0V512" stroke="#ff8a80" stroke-width="6" opacity=".9"/><g transform="translate(34.13 30.13) scale(1.7333)" fill="#fff">
+  <rect x="68" y="38" width="120" height="180" rx="22"/>
+  <g transform="translate(128 128) scale(.62) translate(-110 -128) skewX(-8)" fill="none" stroke="#1d3fbf" stroke-width="30" stroke-linecap="round"><path d="M108 48h40M84 72v32M108 128h40M172 152v32M108 208h40"/></g>
+
+</g></svg>

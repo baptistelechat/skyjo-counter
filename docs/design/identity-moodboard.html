@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skyjo Scan — directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;500;600;700&family=Courier+Prime:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=DM+Mono:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&family=Azeret+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Couleurs de données du scan (familles de cartes), communes à toutes les directions */
+    --famille-r: #dc2626; --famille-j: #facc15; --famille-v: #16a34a; --famille-bc: #67e8f9; --famille-bf: #1e3a8a;
+    --page: #e9eaee; --page-texte: #22232a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--page-texte); font: 15px/1.5 system-ui, sans-serif; }
+  .intro { max-width: 1100px; margin: 0 auto; padding: 32px 16px 8px; }
+  .intro h1 { margin: 0 0 4px; font-size: 22px; }
+  .intro p { margin: 0; max-width: 70ch; }
+
+  .direction-carnet {
+    --font-display: "Patrick Hand", sans-serif;
+    --font-body: "Atkinson Hyperlegible", sans-serif;
+    --font-mono: "Courier Prime", monospace;
+    --radius: 0.375rem;
+    --background: #fbfcfe;
+    --foreground: #1a2240;
+    --card: #ffffff;
+    --card-foreground: #1a2240;
+    --popover: #ffffff;
+    --popover-foreground: #1a2240;
+    --primary: #1d3fbf;
+    --primary-foreground: #ffffff;
+    --secondary: #eeeff3;
+    --secondary-foreground: #1a2240;
+    --muted: #f0f1f5;
+    --muted-foreground: #676c81;
+    --accent: #e0e5f6;
+    --accent-foreground: #1a2240;
+    --destructive: #c62828;
+    --border: #dee0e5;
+    --input: #8c91a1;
+    --ring: #1d3fbf;
+    --chart-1: #1d3fbf;
+    --chart-2: #c62828;
+    --chart-3: #2e7d32;
+    --chart-4: #8a5a00;
+    --chart-5: #6a1b9a;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #1a2240;
+    --sidebar-primary: #1d3fbf;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e0e5f6;
+    --sidebar-accent-foreground: #1a2240;
+    --sidebar-border: #dee0e5;
+    --sidebar-ring: #1d3fbf;
+    --brand: #1d3fbf;
+    --brand-foreground: #ffffff;
+  }
+  .direction-carnet.dark {
+    --background: #121a33;
+    --foreground: #e8ecf8;
+    --card: #18213f;
+    --card-foreground: #e8ecf8;
+    --popover: #18213f;
+    --popover-foreground: #e8ecf8;
+    --primary: #8fa6ff;
+    --primary-foreground: #121a33;
+    --secondary: #272f47;
+    --secondary-foreground: #e8ecf8;
+    --muted: #232b43;
+    --muted-foreground: #8e94a4;
+    --accent: #293358;
+    --accent-foreground: #e8ecf8;
+    --destructive: #ff7a7a;
+    --border: #343c53;
+    --input: #63697d;
+    --ring: #8fa6ff;
+    --chart-1: #8fa6ff;
+    --chart-2: #ff8a80;
+    --chart-3: #81c784;
+    --chart-4: #ffd166;
+    --chart-5: #ce93d8;
+    --sidebar: #18213f;
+    --sidebar-foreground: #e8ecf8;
+    --sidebar-primary: #8fa6ff;
+    --sidebar-primary-foreground: #121a33;
+    --sidebar-accent: #293358;
+    --sidebar-accent-foreground: #e8ecf8;
+    --sidebar-border: #343c53;
+    --sidebar-ring: #8fa6ff;
+    --brand: #8fa6ff;
+    --brand-foreground: #121a33;
+  }
+
+  .direction-tapis {
+    --font-display: "Bricolage Grotesque", sans-serif;
+    --font-body: "Figtree", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+    --radius: 0.75rem;
+    --background: #f3f6f2;
+    --foreground: #13261c;
+    --card: #ffffff;
+    --card-foreground: #13261c;
+    --popover: #ffffff;
+    --popover-foreground: #13261c;
+    --primary: #14553a;
+    --primary-foreground: #ffffff;
+    --secondary: #e6eae5;
+    --secondary-foreground: #13261c;
+    --muted: #e8ece7;
+    --muted-foreground: #5e6c63;
+    --accent: #e7e4d7;
+    --accent-foreground: #13261c;
+    --destructive: #b3261e;
+    --border: #d6dbd6;
+    --input: #858f88;
+    --ring: #8f6214;
+    --chart-1: #8f6214;
+    --chart-2: #14553a;
+    --chart-3: #2f6fb0;
+    --chart-4: #b3261e;
+    --chart-5: #6b4fa0;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #13261c;
+    --sidebar-primary: #14553a;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e7e4d7;
+    --sidebar-accent-foreground: #13261c;
+    --sidebar-border: #d6dbd6;
+    --sidebar-ring: #8f6214;
+    --brand: #8f6214;
+    --brand-foreground: #ffffff;
+  }
+  .direction-tapis.dark {
+    --background: #0d2219;
+    --foreground: #e7efe9;
+    --card: #123024;
+    --card-foreground: #e7efe9;
+    --popover: #123024;
+    --popover-foreground: #e7efe9;
+    --primary: #5fc796;
+    --primary-foreground: #0d2219;
+    --secondary: #23372e;
+    --secondary-foreground: #e7efe9;
+    --muted: #1e322a;
+    --muted-foreground: #8d9a93;
+    --accent: #333c25;
+    --accent-foreground: #e7efe9;
+    --destructive: #ff8a80;
+    --border: #30433a;
+    --input: #5f6f67;
+    --ring: #e0b25a;
+    --chart-1: #e0b25a;
+    --chart-2: #5fc796;
+    --chart-3: #7fb3f0;
+    --chart-4: #ff8a80;
+    --chart-5: #c3a6ff;
+    --sidebar: #123024;
+    --sidebar-foreground: #e7efe9;
+    --sidebar-primary: #5fc796;
+    --sidebar-primary-foreground: #0d2219;
+    --sidebar-accent: #333c25;
+    --sidebar-accent-foreground: #e7efe9;
+    --sidebar-border: #30433a;
+    --sidebar-ring: #e0b25a;
+    --brand: #e0b25a;
+    --brand-foreground: #0d2219;
+  }
+
+  .direction-viseur {
+    --font-display: "Sora", sans-serif;
+    --font-body: "Sora", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+    --radius: 0.25rem;
+    --background: #f4f5f8;
+    --foreground: #141824;
+    --card: #ffffff;
+    --card-foreground: #141824;
+    --popover: #ffffff;
+    --popover-foreground: #141824;
+    --primary: #141824;
+    --primary-foreground: #ffffff;
+    --secondary: #e7e8eb;
+    --secondary-foreground: #141824;
+    --muted: #e9eaed;
+    --muted-foreground: #656770;
+    --accent: #ece2da;
+    --accent-foreground: #141824;
+    --destructive: #c4161c;
+    --border: #d7d8dc;
+    --input: #898b92;
+    --ring: #b45a00;
+    --chart-1: #b45a00;
+    --chart-2: #2554c7;
+    --chart-3: #0f7a5c;
+    --chart-4: #c4161c;
+    --chart-5: #6d3fc0;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #141824;
+    --sidebar-primary: #141824;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #ece2da;
+    --sidebar-accent-foreground: #141824;
+    --sidebar-border: #d7d8dc;
+    --sidebar-ring: #b45a00;
+    --brand: #b45a00;
+    --brand-foreground: #ffffff;
+  }
+  .direction-viseur.dark {
+    --background: #10131c;
+    --foreground: #eef0f6;
+    --card: #181c28;
+    --card-foreground: #eef0f6;
+    --popover: #181c28;
+    --popover-foreground: #eef0f6;
+    --primary: #ffb547;
+    --primary-foreground: #10131c;
+    --secondary: #262932;
+    --secondary-foreground: #eef0f6;
+    --muted: #22252d;
+    --muted-foreground: #8a8d94;
+    --accent: #3b3024;
+    --accent-foreground: #eef0f6;
+    --destructive: #ff6b6b;
+    --border: #34363f;
+    --input: #61636b;
+    --ring: #ffb547;
+    --chart-1: #ffb547;
+    --chart-2: #7aa2ff;
+    --chart-3: #4fd1a5;
+    --chart-4: #ff6b6b;
+    --chart-5: #b794f6;
+    --sidebar: #181c28;
+    --sidebar-foreground: #eef0f6;
+    --sidebar-primary: #ffb547;
+    --sidebar-primary-foreground: #10131c;
+    --sidebar-accent: #3b3024;
+    --sidebar-accent-foreground: #eef0f6;
+    --sidebar-border: #34363f;
+    --sidebar-ring: #ffb547;
+    --brand: #ffb547;
+    --brand-foreground: #10131c;
+  }
+
+  .direction-altitude {
+    --font-display: "Unbounded", sans-serif;
+    --font-body: "Manrope", sans-serif;
+    --font-mono: "DM Mono", monospace;
+    --radius: 1rem;
+    --background: #f2f7fc;
+    --foreground: #0b2238;
+    --card: #ffffff;
+    --card-foreground: #0b2238;
+    --popover: #ffffff;
+    --popover-foreground: #0b2238;
+    --primary: #0b5394;
+    --primary-foreground: #ffffff;
+    --secondary: #e4eaf0;
+    --secondary-foreground: #0b2238;
+    --muted: #e6ecf2;
+    --muted-foreground: #5a6b7b;
+    --accent: #ede1e2;
+    --accent-foreground: #0b2238;
+    --destructive: #b0182b;
+    --border: #d4dbe3;
+    --input: #808e9b;
+    --ring: #c63d22;
+    --chart-1: #c63d22;
+    --chart-2: #0b5394;
+    --chart-3: #13866f;
+    --chart-4: #7a4dbf;
+    --chart-5: #9a6700;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #0b2238;
+    --sidebar-primary: #0b5394;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #ede1e2;
+    --sidebar-accent-foreground: #0b2238;
+    --sidebar-border: #d4dbe3;
+    --sidebar-ring: #c63d22;
+    --brand: #c63d22;
+    --brand-foreground: #ffffff;
+  }
+  .direction-altitude.dark {
+    --background: #0a1a2b;
+    --foreground: #e6f0fa;
+    --card: #10263d;
+    --card-foreground: #e6f0fa;
+    --popover: #10263d;
+    --popover-foreground: #e6f0fa;
+    --primary: #6cb4ff;
+    --primary-foreground: #0a1a2b;
+    --secondary: #202f40;
+    --secondary-foreground: #e6f0fa;
+    --muted: #1c2b3c;
+    --muted-foreground: #8794a1;
+    --accent: #362e37;
+    --accent-foreground: #e6f0fa;
+    --destructive: #ff7f91;
+    --border: #2d3c4c;
+    --input: #5a6876;
+    --ring: #ff8a6b;
+    --chart-1: #ff8a6b;
+    --chart-2: #6cb4ff;
+    --chart-3: #4fd6b8;
+    --chart-4: #b99bff;
+    --chart-5: #ffd166;
+    --sidebar: #10263d;
+    --sidebar-foreground: #e6f0fa;
+    --sidebar-primary: #6cb4ff;
+    --sidebar-primary-foreground: #0a1a2b;
+    --sidebar-accent: #362e37;
+    --sidebar-accent-foreground: #e6f0fa;
+    --sidebar-border: #2d3c4c;
+    --sidebar-ring: #ff8a6b;
+    --brand: #ff8a6b;
+    --brand-foreground: #0a1a2b;
+  }
+
+  .direction-arc {
+    --font-display: "Rubik", sans-serif;
+    --font-body: "Nunito Sans", sans-serif;
+    --font-mono: "Fira Code", monospace;
+    --radius: 0.875rem;
+    --background: #ffffff;
+    --foreground: #1c1b3a;
+    --card: #f7f7fb;
+    --card-foreground: #1c1b3a;
+    --popover: #f7f7fb;
+    --popover-foreground: #1c1b3a;
+    --primary: #1c1b3a;
+    --primary-foreground: #ffffff;
+    --secondary: #f1f1f3;
+    --secondary-foreground: #1c1b3a;
+    --muted: #f4f4f5;
+    --muted-foreground: #6c6b7f;
+    --accent: #e9e7fa;
+    --accent-foreground: #1c1b3a;
+    --destructive: #c8102e;
+    --border: #e1e1e5;
+    --input: #9291a0;
+    --ring: #4b3bd6;
+    --chart-1: #4b3bd6;
+    --chart-2: #d1495b;
+    --chart-3: #1b8a5a;
+    --chart-4: #b06d00;
+    --chart-5: #1d70a2;
+    --sidebar: #f7f7fb;
+    --sidebar-foreground: #1c1b3a;
+    --sidebar-primary: #1c1b3a;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e9e7fa;
+    --sidebar-accent-foreground: #1c1b3a;
+    --sidebar-border: #e1e1e5;
+    --sidebar-ring: #4b3bd6;
+    --brand: #4b3bd6;
+    --brand-foreground: #ffffff;
+  }
+  .direction-arc.dark {
+    --background: #15142b;
+    --foreground: #efeefc;
+    --card: #1e1d3b;
+    --card-foreground: #efeefc;
+    --popover: #1e1d3b;
+    --popover-foreground: #efeefc;
+    --primary: #efeefc;
+    --primary-foreground: #15142b;
+    --secondary: #2b2a40;
+    --secondary-foreground: #efeefc;
+    --muted: #26253c;
+    --muted-foreground: #8f8ea0;
+    --accent: #2f2c51;
+    --accent-foreground: #efeefc;
+    --destructive: #ff7b8c;
+    --border: #38374c;
+    --input: #646377;
+    --ring: #a89bff;
+    --chart-1: #a89bff;
+    --chart-2: #ff8fa0;
+    --chart-3: #5fd39a;
+    --chart-4: #ffcc66;
+    --chart-5: #6fc3f0;
+    --sidebar: #1e1d3b;
+    --sidebar-foreground: #efeefc;
+    --sidebar-primary: #efeefc;
+    --sidebar-primary-foreground: #15142b;
+    --sidebar-accent: #2f2c51;
+    --sidebar-accent-foreground: #efeefc;
+    --sidebar-border: #38374c;
+    --sidebar-ring: #a89bff;
+    --brand: #a89bff;
+    --brand-foreground: #15142b;
+  }
+
+  .direction-veillee {
+    --font-display: "Baloo 2", sans-serif;
+    --font-body: "Lexend", sans-serif;
+    --font-mono: "Azeret Mono", monospace;
+    --radius: 1.25rem;
+    --background: #faf6fb;
+    --foreground: #2a1638;
+    --card: #ffffff;
+    --card-foreground: #2a1638;
+    --popover: #ffffff;
+    --popover-foreground: #2a1638;
+    --primary: #5b2a7a;
+    --primary-foreground: #ffffff;
+    --secondary: #eee9ef;
+    --secondary-foreground: #2a1638;
+    --muted: #f0ebf1;
+    --muted-foreground: #71637b;
+    --accent: #f0e4dd;
+    --accent-foreground: #2a1638;
+    --destructive: #b3203a;
+    --border: #dfd9e2;
+    --input: #93889b;
+    --ring: #a35c00;
+    --chart-1: #a35c00;
+    --chart-2: #5b2a7a;
+    --chart-3: #1f7a6d;
+    --chart-4: #b3203a;
+    --chart-5: #3d5fb8;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #2a1638;
+    --sidebar-primary: #5b2a7a;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #f0e4dd;
+    --sidebar-accent-foreground: #2a1638;
+    --sidebar-border: #dfd9e2;
+    --sidebar-ring: #a35c00;
+    --brand: #a35c00;
+    --brand-foreground: #ffffff;
+  }
+  .direction-veillee.dark {
+    --background: #1c0f26;
+    --foreground: #f4ecf8;
+    --card: #271536;
+    --card-foreground: #f4ecf8;
+    --popover: #271536;
+    --popover-foreground: #f4ecf8;
+    --primary: #d8a6ff;
+    --primary-foreground: #1c0f26;
+    --secondary: #32253b;
+    --secondary-foreground: #f4ecf8;
+    --muted: #2d2137;
+    --muted-foreground: #958b9c;
+    --accent: #452f30;
+    --accent-foreground: #f4ecf8;
+    --destructive: #ff8296;
+    --border: #3f3248;
+    --input: #6b5f73;
+    --ring: #ffbe5c;
+    --chart-1: #ffbe5c;
+    --chart-2: #d8a6ff;
+    --chart-3: #5fd1bd;
+    --chart-4: #ff8296;
+    --chart-5: #8fb0ff;
+    --sidebar: #271536;
+    --sidebar-foreground: #f4ecf8;
+    --sidebar-primary: #d8a6ff;
+    --sidebar-primary-foreground: #1c0f26;
+    --sidebar-accent: #452f30;
+    --sidebar-accent-foreground: #f4ecf8;
+    --sidebar-border: #3f3248;
+    --sidebar-ring: #ffbe5c;
+    --brand: #ffbe5c;
+    --brand-foreground: #1c0f26;
+  }
+  .direction { max-width: 1100px; margin: 24px auto; padding: 28px; display: grid; grid-template-columns: 1fr 380px; gap: 28px;
+    background: var(--background); color: var(--foreground); font-family: var(--font-body); border-radius: 20px; transition: background .25s, color .25s; }
+  .info h2 { font-family: var(--font-display); font-size: 40px; line-height: 1.05; margin: 0 0 8px; color: var(--foreground); }
+  .tagline { margin: 0 0 12px; max-width: 52ch; font-size: 16px; }
+  .sig { margin: 0 0 16px; color: var(--muted-foreground); font-size: 14px; }
+  .fontes, .swatches { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 6px; }
+  .fontes li { display: flex; gap: 10px; align-items: baseline; }
+  .fontes span { font-size: 18px; }
+  code { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); min-width: 118px; display: inline-block; }
+  .swatches { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .swatches li { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .swatches i { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); flex: none; }
+  .swatches code { min-width: 0; }
+  .swatches span { font-family: var(--font-mono); color: var(--muted-foreground); }
+  .bascule { font: inherit; padding: 8px 14px; border-radius: var(--radius); background: var(--secondary); color: var(--secondary-foreground); border: 1px solid var(--border); cursor: pointer; }
+  .bascule:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+  /* Maquette */
+  .app { background: var(--background); border: 1px solid var(--border); border-radius: calc(var(--radius) * 2); padding: 14px; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
+  .barre { display: flex; justify-content: space-between; align-items: center; }
+  .titre { font-family: var(--font-display); font-size: 26px; font-weight: 700; }
+  .btn-out { border: 1px solid var(--input); border-radius: var(--radius); padding: 4px 10px; font-size: 13px; }
+  .carte { background: var(--card); color: var(--card-foreground); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .carte-tete { display: flex; justify-content: space-between; align-items: baseline; }
+  .h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+  .mono { font-family: var(--font-mono); }
+  .petit { font-size: 11px; color: var(--muted-foreground); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 3px 4px; text-align: right; border-bottom: 1px solid var(--border); }
+  th:first-child { text-align: left; color: var(--muted-foreground); font-weight: 500; }
+  thead th { color: var(--muted-foreground); font-weight: 500; }
+  tfoot td { font-weight: 700; font-size: 15px; }
+  .danger { color: var(--destructive); }
+  .barres { display: flex; gap: 8px; align-items: flex-end; height: 34px; }
+  .barres span { flex: 1; height: var(--h); border-radius: calc(var(--radius) * 0.5) calc(var(--radius) * 0.5) 0 0; }
+  .score { font-size: 15px; color: var(--brand); font-weight: 700; }
+  .grille { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .mini { aspect-ratio: 2/3; border-radius: calc(var(--radius) * 0.6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #fff; font-family: var(--font-display); }
+  .f-r { background: var(--famille-r); } .f-v { background: var(--famille-v); } .f-bf { background: var(--famille-bf); }
+  .f-j { background: var(--famille-j); color: #000; } .f-bc { background: var(--famille-bc); color: #000; }
+  .f-dos { background: conic-gradient(var(--famille-r), var(--famille-j), var(--famille-v), var(--famille-bc), var(--famille-bf), var(--famille-r)); }
+  .aide { margin: 0; font-size: 13px; color: var(--muted-foreground); }
+  .badge-erreur { align-self: flex-start; font-size: 12px; font-weight: 600; color: var(--destructive); border: 1px solid var(--destructive); border-radius: 999px; padding: 1px 8px; }
+  .champ-label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted-foreground); }
+  .champ { border: 1px solid var(--input); border-radius: var(--radius); padding: 6px 10px; color: var(--foreground); background: var(--background); }
+  .champ.focus { outline: 3px solid var(--ring); outline-offset: 1px; }
+  .joueurs { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .joueurs li { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-radius: calc(var(--radius) * 0.7); }
+  .joueurs li.survol { background: var(--accent); color: var(--accent-foreground); }
+  .btn-mini { font-size: 12px; background: var(--secondary); color: var(--secondary-foreground); padding: 2px 10px; border-radius: var(--radius); }
+  .btn-plein { text-align: center; background: var(--primary); color: var(--primary-foreground); border-radius: var(--radius); padding: 9px; font-weight: 600; }
+  /* Signatures */
+  .direction-carnet .app { background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 8px 8px; }
+  .direction-carnet .titre { color: var(--brand); }
+  .direction-carnet .carte { border-left: 3px solid var(--destructive); }
+  .direction-tapis .barre { padding-bottom: 8px; border-bottom: 2px solid var(--brand); }
+  .direction-tapis .app { background-image: radial-gradient(color-mix(in srgb, var(--foreground) 6%, transparent) 1px, transparent 1px); background-size: 4px 4px; }
+  .direction-viseur .cadre::before, .direction-viseur .cadre::after { content: ''; position: absolute; width: 18px; height: 18px; border: 2px solid var(--brand); }
+  .direction-viseur .cadre::before { top: -6px; left: -6px; border-right: 0; border-bottom: 0; }
+  .direction-viseur .cadre::after { bottom: -6px; right: -6px; border-left: 0; border-top: 0; }
+  .direction-viseur .titre { letter-spacing: -0.02em; }
+  .direction-altitude .titre { font-size: 22px; }
+  .bandeau { display: flex; height: 8px; margin: -14px -14px 0; }
+  .bandeau i { flex: 1; }
+  .direction-veillee .btn-plein, .direction-veillee .btn-mini, .direction-veillee .btn-out { border-radius: 999px; }
+  @media (max-width: 860px) { .direction { grid-template-columns: 1fr; padding: 18px; margin: 16px; } .app { max-width: 380px; } }
+  @media (prefers-reduced-motion: reduce) { .direction { transition: none; } }
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Skyjo Scan — 6 directions de design</h1>
+  <p>Chaque direction déclare les 31 tokens shadcn, en clair et en sombre, avec des contrastes WCAG AA vérifiés par calcul. Les couleurs des cartes scannées restent celles du jeu, quelle que soit la direction.</p>
+</div>
+
+<section class="direction direction-carnet" id="carnet">
+  <div class="info">
+    <h2>Carnet</h2>
+    <p class="tagline">La feuille de marque qui traîne sur la table : petits carreaux, encre de stylo bille, marge rouge.</p>
+    <p class="sig"><b>Signature :</b> Petits carreaux de 8 px sur le fond, comme un bloc de score.</p>
+    <ul class="fontes">
+      <li><code>--font-display</code> <span style="font-family:var(--font-display)">Patrick Hand</span></li>
+      <li><code>--font-body</code> <span style="font-family:var(--font-body)">Atkinson Hyperlegible</span></li>
+      <li><code>--font-mono</code> <span style="font-family:var(--font-mono)">Courier Prime</span></li>
+      <li><code>--radius</code> <span>0.375rem</span></li>
+    </ul>
+    <ul class="swatches"><li><i style="background:var(--primary)"></i><code>--primary</code><span>#1d3fbf</span></li><li><i style="background:var(--brand)"></i><code>--brand</code><span>#1d3fbf</span></li><li><i style="background:var(--background)"></i><code>--background</code><span>#fbfcfe</span></li><li><i style="background:var(--card)"></i><code>--card</code><span>#ffffff</span></li><li><i style="background:var(--foreground)"></i><code>--foreground</code><span>#1a2240</span></li><li><i style="background:var(--muted-foreground)"></i><code>--muted-foreground</code><span>#676c81</span></li><li><i style="background:var(--accent)"></i><code>--accent</code><span>#e0e5f6</span></li><li><i style="background:var(--border)"></i><code>--border</code><span>#dee0e5</span></li><li><i style="background:var(--destructive)"></i><code>--destructive</code><span>#c62828</span></li><li><i style="background:var(--chart-2)"></i><code>--chart-2</code><span>#c62828</span></li><li><i style="background:var(--chart-3)"></i><code>--chart-3</code><span>#2e7d32</span></li></ul>
+    <button type="button" class="bascule" aria-pressed="false">Voir en sombre</button>
+  </div>
+  <div class="app" role="img" aria-label="Maquette Skyjo Scan, direction Carnet">
+    
+    <header class="barre">
+      <span class="titre">Skyjo Scan</span>
+      <span class="btn-out">Nouvelle partie</span>
+    </header>
+    <div class="carte">
+      <div class="carte-tete"><span class="h3">Scores</span><span class="mono petit">manche 4 · limite 100</span></div>
+      <table>
+        <thead><tr><th>Manche</th><th>Alice</th><th>Bruno</th><th>Chloé</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>12</td><td>21</td><td>6</td></tr>
+          <tr><th>2</th><td>-1</td><td>18</td><td>14</td></tr>
+          <tr><th>3</th><td>9</td><td>27</td><td>11</td></tr>
+        </tbody>
+        <tfoot><tr><th>Total</th><td>20</td><td class="danger">66</td><td>31</td></tr></tfoot>
+      </table>
+      <div class="barres" aria-hidden="true">
+        <span style="--h:30%;background:var(--chart-1)"></span><span style="--h:100%;background:var(--chart-2)"></span><span style="--h:47%;background:var(--chart-3)"></span>
+      </div>
+    </div>
+    <div class="carte cadre">
+      <div class="carte-tete"><span class="h3">Grille de Bruno</span><span class="score mono">36 pts</span></div>
+      <div class="grille"><span class="mini f-r">9</span><span class="mini f-v">3</span><span class="mini f-j">5</span><span class="mini f-bc">0</span><span class="mini f-j">7</span><span class="mini f-dos"></span><span class="mini f-v">2</span><span class="mini f-bf">-1</span><span class="mini f-r">11</span><span class="mini f-v">1</span><span class="mini f-bc">0</span><span class="mini f-bf">-2</span></div>
+      <p class="aide">Touchez une carte pour corriger la lecture.</p>
+      <span class="badge-erreur">1 carte à vérifier</span>
+    </div>
+    <div class="carte">
+      <span class="h3">Manche 4</span>
+      <label class="champ-label">Ajouter un joueur<span class="champ focus">David</span></label>
+      <ul class="joueurs">
+        <li class="survol"><span>Alice</span><span class="mono">8</span></li>
+        <li><span>Bruno</span><span class="btn-mini">Scanner</span></li>
+        <li><span>Chloé</span><span class="btn-mini">Scanner</span></li>
+      </ul>
+      <span class="btn-plein">Valider la manche</span>
+    </div>
+  </div>
+</section>
+
+<section class="direction direction-tapis" id="tapis">
+  <div class="info">
+    <h2>Tapis vert</h2>
+    <p class="tagline">Le feutre d'une table de jeu et le laiton des jetons : une soirée cartes sérieuse mais chaleureuse.</p>
+    <p class="sig"><b>Signature :</b> Grain de feutre discret dans l'en-tête, filet laiton sous les titres.</p>
+    <ul class="fontes">
+      <li><code>--font-display</code> <span style="font-family:var(--font-display)">Bricolage Grotesque</span></li>
+      <li><code>--font-body</code> <span style="font-family:var(--font-body)">Figtree</span></li>
+      <li><code>--font-mono</code> <span style="font-family:var(--font-mono)">IBM Plex Mono</span></li>
+      <li><code>--radius</code> <span>0.75rem</span></li>
+    </ul>
+    <ul class="swatches"><li><i style="background:var(--primary)"></i><code>--primary</code><span>#14553a</span></li><li><i style="background:var(--brand)"></i><code>--brand</code><span>#8f6214</span></li><li><i style="background:var(--background)"></i><code>--background</code><span>#f3f6f2</span></li><li><i style="background:var(--card)"></i><code>--card</code><span>#ffffff</span></li><li><i style="background:var(--foreground)"></i><code>--foreground</code><span>#13261c</span></li><li><i style="background:var(--muted-foreground)"></i><code>--muted-foreground</code><span>#5e6c63</span></li><li><i style="background:var(--accent)"></i><code>--accent</code><span>#e7e4d7</span></li><li><i style="background:var(--border)"></i><code>--border</code><span>#d6dbd6</span></li><li><i style="background:var(--destructive)"></i><code>--destructive</code><span>#b3261e</span></li><li><i style="background:var(--chart-2)"></i><code>--chart-2</code><span>#14553a</span></li><li><i style="background:var(--chart-3)"></i><code>--chart-3</code><span>#2f6fb0</span></li></ul>
+    <button type="button" class="bascule" aria-pressed="false">Voir en sombre</button>
+  </div>
+  <div class="app" role="img" aria-label="Maquette Skyjo Scan, direction Tapis vert">
+    
+    <header class="barre">
+      <span class="titre">Skyjo Scan</span>
+      <span class="btn-out">Nouvelle partie</span>
+    </header>
+    <div class="carte">
+      <div class="carte-tete"><span class="h3">Scores</span><span class="mono petit">manche 4 · limite 100</span></div>
+      <table>
+        <thead><tr><th>Manche</th><th>Alice</th><th>Bruno</th><th>Chloé</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>12</td><td>21</td><td>6</td></tr>
+          <tr><th>2</th><td>-1</td><td>18</td><td>14</td></tr>
+          <tr><th>3</th><td>9</td><td>27</td><td>11</td></tr>
+        </tbody>
+        <tfoot><tr><th>Total</th><td>20</td><td class="danger">66</td><td>31</td></tr></tfoot>
+      </table>
+      <div class="barres" aria-hidden="true">
+        <span style="--h:30%;background:var(--chart-1)"></span><span style="--h:100%;background:var(--chart-2)"></span><span style="--h:47%;background:var(--chart-3)"></span>
+      </div>
+    </div>
+    <div class="carte cadre">
+      <div class="carte-tete"><span class="h3">Grille de Bruno</span><span class="score mono">36 pts</span></div>
+      <div class="grille"><span class="mini f-r">9</span><span class="mini f-v">3</span><span class="mini f-j">5</span><span class="mini f-bc">0</span><span class="mini f-j">7</span><span class="mini f-dos"></span><span class="mini f-v">2</span><span class="mini f-bf">-1</span><span class="mini f-r">11</span><span class="mini f-v">1</span><span class="mini f-bc">0</span><span class="mini f-bf">-2</span></div>
+      <p class="aide">Touchez une carte pour corriger la lecture.</p>
+      <span class="badge-erreur">1 carte à vérifier</span>
+    </div>
+    <div class="carte">
+      <span class="h3">Manche 4</span>
+      <label class="champ-label">Ajouter un joueur<span class="champ focus">David</span></label>
+      <ul class="joueurs">
+        <li class="survol"><span>Alice</span><span class="mono">8</span></li>
+        <li><span>Bruno</span><span class="btn-mini">Scanner</span></li>
+        <li><span>Chloé</span><span class="btn-mini">Scanner</span></li>
+      </ul>
+      <span class="btn-plein">Valider la manche</span>
+    </div>
+  </div>
+</section>
+
+<section class="direction direction-viseur" id="viseur">
+  <div class="info">
+    <h2>Viseur</h2>
+    <p class="tagline">L'écran d'un appareil photo au moment de cadrer : repères d'angle, voyant de mise au point, chiffres nets.</p>
+    <p class="sig"><b>Signature :</b> Repères d'angle de cadrage autour des grilles et de la zone photo.</p>
+    <ul class="fontes">
+      <li><code>--font-display</code> <span style="font-family:var(--font-display)">Sora</span></li>
+      <li><code>--font-body</code> <span style="font-family:var(--font-body)">Sora</span></li>
+      <li><code>--font-mono</code> <span style="font-family:var(--font-mono)">JetBrains Mono</span></li>
+      <li><code>--radius</code> <span>0.25rem</span></li>
+    </ul>
+    <ul class="swatches"><li><i style="background:var(--primary)"></i><code>--primary</code><span>#141824</span></li><li><i style="background:var(--brand)"></i><code>--brand</code><span>#b45a00</span></li><li><i style="background:var(--background)"></i><code>--background</code><span>#f4f5f8</span></li><li><i style="background:var(--card)"></i><code>--card</code><span>#ffffff</span></li><li><i style="background:var(--foreground)"></i><code>--foreground</code><span>#141824</span></li><li><i style="background:var(--muted-foreground)"></i><code>--muted-foreground</code><span>#656770</span></li><li><i style="background:var(--accent)"></i><code>--accent</code><span>#ece2da</span></li><li><i style="background:var(--border)"></i><code>--border</code><span>#d7d8dc</span></li><li><i style="background:var(--destructive)"></i><code>--destructive</code><span>#c4161c</span></li><li><i style="background:var(--chart-2)"></i><code>--chart-2</code><span>#2554c7</span></li><li><i style="background:var(--chart-3)"></i><code>--chart-3</code><span>#0f7a5c</span></li></ul>
+    <button type="button" class="bascule" aria-pressed="false">Voir en sombre</button>
+  </div>
+  <div class="app" role="img" aria-label="Maquette Skyjo Scan, direction Viseur">
+    
+    <header class="barre">
+      <span class="titre">Skyjo Scan</span>
+      <span class="btn-out">Nouvelle partie</span>
+    </header>
+    <div class="carte">
+      <div class="carte-tete"><span class="h3">Scores</span><span class="mono petit">manche 4 · limite 100</span></div>
+      <table>
+        <thead><tr><th>Manche</th><th>Alice</th><th>Bruno</th><th>Chloé</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>12</td><td>21</td><td>6</td></tr>
+          <tr><th>2</th><td>-1</td><td>18</td><td>14</td></tr>
+          <tr><th>3</th><td>9</td><td>27</td><td>11</td></tr>
+        </tbody>
+        <tfoot><tr><th>Total</th><td>20</td><td class="danger">66</td><td>31</td></tr></tfoot>
+      </table>
+      <div class="barres" aria-hidden="true">
+        <span style="--h:30%;background:var(--chart-1)"></span><span style="--h:100%;background:var(--chart-2)"></span><span style="--h:47%;background:var(--chart-3)"></span>
+      </div>
+    </div>
+    <div class="carte cadre">
+      <div class="carte-tete"><span class="h3">Grille de Bruno</span><span class="score mono">36 pts</span></div>
+      <div class="grille"><span class="mini f-r">9</span><span class="mini f-v">3</span><span class="mini f-j">5</span><span class="mini f-bc">0</span><span class="mini f-j">7</span><span class="mini f-dos"></span><span class="mini f-v">2</span><span class="mini f-bf">-1</span><span class="mini f-r">11</span><span class="mini f-v">1</span><span class="mini f-bc">0</span><span class="mini f-bf">-2</span></div>
+      <p class="aide">Touchez une carte pour corriger la lecture.</p>
+      <span class="badge-erreur">1 carte à vérifier</span>
+    </div>
+    <div class="carte">
+      <span class="h3">Manche 4</span>
+      <label class="champ-label">Ajouter un joueur<span class="champ focus">David</span></label>
+      <ul class="joueurs">
+        <li class="survol"><span>Alice</span><span class="mono">8</span></li>
+        <li><span>Bruno</span><span class="btn-mini">Scanner</span></li>
+        <li><span>Chloé</span><span class="btn-mini">Scanner</span></li>
+      </ul>
+      <span class="btn-plein">Valider la manche</span>
+    </div>
+  </div>
+</section>
+
+<section class="direction direction-altitude" id="altitude">
+  <div class="info">
+    <h2>Altitude</h2>
+    <p class="tagline">Air froid et ciel net de haute montagne : bleu glacier, neige et un soleil levant pour les victoires.</p>
+    <p class="sig"><b>Signature :</b> Aucune : palette et typographie seules, grands aplats calmes.</p>
+    <ul class="fontes">
+      <li><code>--font-display</code> <span style="font-family:var(--font-display)">Unbounded</span></li>
+      <li><code>--font-body</code> <span style="font-family:var(--font-body)">Manrope</span></li>
+      <li><code>--font-mono</code> <span style="font-family:var(--font-mono)">DM Mono</span></li>
+      <li><code>--radius</code> <span>1rem</span></li>
+    </ul>
+    <ul class="swatches"><li><i style="background:var(--primary)"></i><code>--primary</code><span>#0b5394</span></li><li><i style="background:var(--brand)"></i><code>--brand</code><span>#c63d22</span></li><li><i style="background:var(--background)"></i><code>--background</code><span>#f2f7fc</span></li><li><i style="background:var(--card)"></i><code>--card</code><span>#ffffff</span></li><li><i style="background:var(--foreground)"></i><code>--foreground</code><span>#0b2238</span></li><li><i style="background:var(--muted-foreground)"></i><code>--muted-foreground</code><span>#5a6b7b</span></li><li><i style="background:var(--accent)"></i><code>--accent</code><span>#ede1e2</span></li><li><i style="background:var(--border)"></i><code>--border</code><span>#d4dbe3</span></li><li><i style="background:var(--destructive)"></i><code>--destructive</code><span>#b0182b</span></li><li><i style="background:var(--chart-2)"></i><code>--chart-2</code><span>#0b5394</span></li><li><i style="background:var(--chart-3)"></i><code>--chart-3</code><span>#13866f</span></li></ul>
+    <button type="button" class="bascule" aria-pressed="false">Voir en sombre</button>
+  </div>
+  <div class="app" role="img" aria-label="Maquette Skyjo Scan, direction Altitude">
+    
+    <header class="barre">
+      <span class="titre">Skyjo Scan</span>
+      <span class="btn-out">Nouvelle partie</span>
+    </header>
+    <div class="carte">
+      <div class="carte-tete"><span class="h3">Scores</span><span class="mono petit">manche 4 · limite 100</span></div>
+      <table>
+        <thead><tr><th>Manche</th><th>Alice</th><th>Bruno</th><th>Chloé</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>12</td><td>21</td><td>6</td></tr>
+          <tr><th>2</th><td>-1</td><td>18</td><td>14</td></tr>
+          <tr><th>3</th><td>9</td><td>27</td><td>11</td></tr>
+        </tbody>
+        <tfoot><tr><th>Total</th><td>20</td><td class="danger">66</td><td>31</td></tr></tfoot>
+      </table>
+      <div class="barres" aria-hidden="true">
+        <span style="--h:30%;background:var(--chart-1)"></span><span style="--h:100%;background:var(--chart-2)"></span><span style="--h:47%;background:var(--chart-3)"></span>
+      </div>
+    </div>
+    <div class="carte cadre">
+      <div class="carte-tete"><span class="h3">Grille de Bruno</span><span class="score mono">36 pts</span></div>
+      <div class="grille"><span class="mini f-r">9</span><span class="mini f-v">3</span><span class="mini f-j">5</span><span class="mini f-bc">0</span><span class="mini f-j">7</span><span class="mini f-dos"></span><span class="mini f-v">2</span><span class="mini f-bf">-1</span><span class="mini f-r">11</span><span class="mini f-v">1</span><span class="mini f-bc">0</span><span class="mini f-bf">-2</span></div>
+      <p class="aide">Touchez une carte pour corriger la lecture.</p>
+      <span class="badge-erreur">1 carte à vérifier</span>
+    </div>
+    <div class="carte">
+      <span class="h3">Manche 4</span>
+      <label class="champ-label">Ajouter un joueur<span class="champ focus">David</span></label>
+      <ul class="joueurs">
+        <li class="survol"><span>Alice</span><span class="mono">8</span></li>
+        <li><span>Bruno</span><span class="btn-mini">Scanner</span></li>
+        <li><span>Chloé</span><span class="btn-mini">Scanner</span></li>
+      </ul>
+      <span class="btn-plein">Valider la manche</span>
+    </div>
+  </div>
+</section>
+
+<section class="direction direction-arc" id="arc">
+  <div class="info">
+    <h2>Arc-en-ciel</h2>
+    <p class="tagline">Les cinq familles de cartes deviennent l'identité : un bandeau rouge, jaune, vert, cyan, bleu signe chaque écran.</p>
+    <p class="sig"><b>Signature :</b> Bandeau des cinq familles de cartes (couleurs réelles du scan).</p>
+    <ul class="fontes">
+      <li><code>--font-display</code> <span style="font-family:var(--font-display)">Rubik</span></li>
+      <li><code>--font-body</code> <span style="font-family:var(--font-body)">Nunito Sans</span></li>
+      <li><code>--font-mono</code> <span style="font-family:var(--font-mono)">Fira Code</span></li>
+      <li><code>--radius</code> <span>0.875rem</span></li>
+    </ul>
+    <ul class="swatches"><li><i style="background:var(--primary)"></i><code>--primary</code><span>#1c1b3a</span></li><li><i style="background:var(--brand)"></i><code>--brand</code><span>#4b3bd6</span></li><li><i style="background:var(--background)"></i><code>--background</code><span>#ffffff</span></li><li><i style="background:var(--card)"></i><code>--card</code><span>#f7f7fb</span></li><li><i style="background:var(--foreground)"></i><code>--foreground</code><span>#1c1b3a</span></li><li><i style="background:var(--muted-foreground)"></i><code>--muted-foreground</code><span>#6c6b7f</span></li><li><i style="background:var(--accent)"></i><code>--accent</code><span>#e9e7fa</span></li><li><i style="background:var(--border)"></i><code>--border</code><span>#e1e1e5</span></li><li><i style="background:var(--destructive)"></i><code>--destructive</code><span>#c8102e</span></li><li><i style="background:var(--chart-2)"></i><code>--chart-2</code><span>#d1495b</span></li><li><i style="background:var(--chart-3)"></i><code>--chart-3</code><span>#1b8a5a</span></li></ul>
+    <button type="button" class="bascule" aria-pressed="false">Voir en sombre</button>
+  </div>
+  <div class="app" role="img" aria-label="Maquette Skyjo Scan, direction Arc-en-ciel">
+    <div class="bandeau"><i class="f-r"></i><i class="f-j"></i><i class="f-v"></i><i class="f-bc"></i><i class="f-bf"></i></div>
+    <header class="barre">
+      <span class="titre">Skyjo Scan</span>
+      <span class="btn-out">Nouvelle partie</span>
+    </header>
+    <div class="carte">
+      <div class="carte-tete"><span class="h3">Scores</span><span class="mono petit">manche 4 · limite 100</span></div>
+      <table>
+        <thead><tr><th>Manche</th><th>Alice</th><th>Bruno</th><th>Chloé</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>12</td><td>21</td><td>6</td></tr>
+          <tr><th>2</th><td>-1</td><td>18</td><td>14</td></tr>
+          <tr><th>3</th><td>9</td><td>27</td><td>11</td></tr>
+        </tbody>
+        <tfoot><tr><th>Total</th><td>20</td><td class="danger">66</td><td>31</td></tr></tfoot>
+      </table>
+      <div class="barres" aria-hidden="true">
+        <span style="--h:30%;background:var(--chart-1)"></span><span style="--h:100%;background:var(--chart-2)"></span><span style="--h:47%;background:var(--chart-3)"></span>
+      </div>
+    </div>
+    <div class="carte cadre">
+      <div class="carte-tete"><span class="h3">Grille de Bruno</span><span class="score mono">36 pts</span></div>
+      <div class="grille"><span class="mini f-r">9</span><span class="mini f-v">3</span><span class="mini f-j">5</span><span class="mini f-bc">0</span><span class="mini f-j">7</span><span class="mini f-dos"></span><span class="mini f-v">2</span><span class="mini f-bf">-1</span><span class="mini f-r">11</span><span class="mini f-v">1</span><span class="mini f-bc">0</span><span class="mini f-bf">-2</span></div>
+      <p class="aide">Touchez une carte pour corriger la lecture.</p>
+      <span class="badge-erreur">1 carte à vérifier</span>
+    </div>
+    <div class="carte">
+      <span class="h3">Manche 4</span>
+      <label class="champ-label">Ajouter un joueur<span class="champ focus">David</span></label>
+      <ul class="joueurs">
+        <li class="survol"><span>Alice</span><span class="mono">8</span></li>
+        <li><span>Bruno</span><span class="btn-mini">Scanner</span></li>
+        <li><span>Chloé</span><span class="btn-mini">Scanner</span></li>
+      </ul>
+      <span class="btn-plein">Valider la manche</span>
+    </div>
+  </div>
+</section>
+
+<section class="direction direction-veillee" id="veillee">
+  <div class="info">
+    <h2>Veillée</h2>
+    <p class="tagline">Fin de soirée sous la lampe du salon : prune profonde, lumière ambrée, typo ronde et détendue.</p>
+    <p class="sig"><b>Signature :</b> Aucune : chaleur portée par la couleur et les formes rondes.</p>
+    <ul class="fontes">
+      <li><code>--font-display</code> <span style="font-family:var(--font-display)">Baloo 2</span></li>
+      <li><code>--font-body</code> <span style="font-family:var(--font-body)">Lexend</span></li>
+      <li><code>--font-mono</code> <span style="font-family:var(--font-mono)">Azeret Mono</span></li>
+      <li><code>--radius</code> <span>1.25rem</span></li>
+    </ul>
+    <ul class="swatches"><li><i style="background:var(--primary)"></i><code>--primary</code><span>#5b2a7a</span></li><li><i style="background:var(--brand)"></i><code>--brand</code><span>#a35c00</span></li><li><i style="background:var(--background)"></i><code>--background</code><span>#faf6fb</span></li><li><i style="background:var(--card)"></i><code>--card</code><span>#ffffff</span></li><li><i style="background:var(--foreground)"></i><code>--foreground</code><span>#2a1638</span></li><li><i style="background:var(--muted-foreground)"></i><code>--muted-foreground</code><span>#71637b</span></li><li><i style="background:var(--accent)"></i><code>--accent</code><span>#f0e4dd</span></li><li><i style="background:var(--border)"></i><code>--border</code><span>#dfd9e2</span></li><li><i style="background:var(--destructive)"></i><code>--destructive</code><span>#b3203a</span></li><li><i style="background:var(--chart-2)"></i><code>--chart-2</code><span>#5b2a7a</span></li><li><i style="background:var(--chart-3)"></i><code>--chart-3</code><span>#1f7a6d</span></li></ul>
+    <button type="button" class="bascule" aria-pressed="false">Voir en sombre</button>
+  </div>
+  <div class="app" role="img" aria-label="Maquette Skyjo Scan, direction Veillée">
+    
+    <header class="barre">
+      <span class="titre">Skyjo Scan</span>
+      <span class="btn-out">Nouvelle partie</span>
+    </header>
+    <div class="carte">
+      <div class="carte-tete"><span class="h3">Scores</span><span class="mono petit">manche 4 · limite 100</span></div>
+      <table>
+        <thead><tr><th>Manche</th><th>Alice</th><th>Bruno</th><th>Chloé</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>12</td><td>21</td><td>6</td></tr>
+          <tr><th>2</th><td>-1</td><td>18</td><td>14</td></tr>
+          <tr><th>3</th><td>9</td><td>27</td><td>11</td></tr>
+        </tbody>
+        <tfoot><tr><th>Total</th><td>20</td><td class="danger">66</td><td>31</td></tr></tfoot>
+      </table>
+      <div class="barres" aria-hidden="true">
+        <span style="--h:30%;background:var(--chart-1)"></span><span style="--h:100%;background:var(--chart-2)"></span><span style="--h:47%;background:var(--chart-3)"></span>
+      </div>
+    </div>
+    <div class="carte cadre">
+      <div class="carte-tete"><span class="h3">Grille de Bruno</span><span class="score mono">36 pts</span></div>
+      <div class="grille"><span class="mini f-r">9</span><span class="mini f-v">3</span><span class="mini f-j">5</span><span class="mini f-bc">0</span><span class="mini f-j">7</span><span class="mini f-dos"></span><span class="mini f-v">2</span><span class="mini f-bf">-1</span><span class="mini f-r">11</span><span class="mini f-v">1</span><span class="mini f-bc">0</span><span class="mini f-bf">-2</span></div>
+      <p class="aide">Touchez une carte pour corriger la lecture.</p>
+      <span class="badge-erreur">1 carte à vérifier</span>
+    </div>
+    <div class="carte">
+      <span class="h3">Manche 4</span>
+      <label class="champ-label">Ajouter un joueur<span class="champ focus">David</span></label>
+      <ul class="joueurs">
+        <li class="survol"><span>Alice</span><span class="mono">8</span></li>
+        <li><span>Bruno</span><span class="btn-mini">Scanner</span></li>
+        <li><span>Chloé</span><span class="btn-mini">Scanner</span></li>
+      </ul>
+      <span class="btn-plein">Valider la manche</span>
+    </div>
+  </div>
+</section>
+<script>
+  document.querySelectorAll('.bascule').forEach((b) => b.addEventListener('click', () => {
+    const s = b.closest('.direction'); const sombre = s.classList.toggle('dark')
+    b.setAttribute('aria-pressed', String(sombre)); b.textContent = sombre ? 'Voir en clair' : 'Voir en sombre'
+  }))
+</script>
+</body>
+</html>

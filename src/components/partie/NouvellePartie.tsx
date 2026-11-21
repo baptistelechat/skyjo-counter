@@ -24,9 +24,10 @@ const NouvellePartie = ({ onCreer }: Props): React.JSX.Element => {
   return (
     <main className="mx-auto flex min-h-svh max-w-md flex-col gap-6 p-6">
       <header className="space-y-1 text-center">
-        <h1 className="text-3xl font-bold">Skyjo Scan</h1>
+        <h1 className="font-heading text-4xl text-primary">Skyjo Scan</h1>
         <p className="text-muted-foreground">
-          Photographie les grilles, l'app compte les points.
+          Les scores de toute la partie, manche après manche. Une photo de la
+          grille suffit pour saisir une manche.
         </p>
       </header>
 

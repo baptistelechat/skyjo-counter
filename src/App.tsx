@@ -56,7 +56,7 @@ const Jeu = (): React.JSX.Element | null => {
   return (
     <main className="mx-auto flex min-h-svh max-w-md flex-col items-center gap-5 p-4">
       <header className="flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">Skyjo Scan</h1>
+        <h1 className="font-heading text-3xl text-primary">Skyjo Scan</h1>
         <Button variant="outline" size="sm" onClick={nouvelle}>
           <RotateCcw aria-hidden="true" />
           Nouvelle partie
