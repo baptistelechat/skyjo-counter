@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Play, Plus, X } from "lucide-react";
+import { History, Play, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,10 +7,16 @@ import { JOUEURS_MAX, JOUEURS_MIN, nomsValides } from "@/lib/partie";
 
 interface Props {
   onCreer: (noms: string[]) => void;
+  connus: string[]; // prénoms déjà joués, proposés en autocomplétion
+  onHistorique: () => void;
 }
 
 // Création d'une partie : 2 à 8 joueurs, noms obligatoires et distincts.
-const NouvellePartie = ({ onCreer }: Props): React.JSX.Element => {
+const NouvellePartie = ({
+  onCreer,
+  connus,
+  onHistorique,
+}: Props): React.JSX.Element => {
   const [noms, setNoms] = useState(["", ""]);
   const valides = nomsValides(noms);
   const doublon =
@@ -47,6 +53,7 @@ const NouvellePartie = ({ onCreer }: Props): React.JSX.Element => {
                 id={`joueur-${i}`}
                 value={nom}
                 autoComplete="off"
+                list={connus.length ? "joueurs-connus" : undefined}
                 maxLength={20}
                 placeholder="Prénom"
                 onChange={(e) => changer(i, e.target.value)}
@@ -84,7 +91,18 @@ const NouvellePartie = ({ onCreer }: Props): React.JSX.Element => {
           <Play aria-hidden="true" />
           Commencer la partie
         </Button>
+        <datalist id="joueurs-connus">
+          {connus
+            .filter((c) => !valides.some((n) => n.toLowerCase() === c.toLowerCase()))
+            .map((c) => (
+              <option key={c} value={c} />
+            ))}
+        </datalist>
       </form>
+      <Button variant="ghost" onClick={onHistorique}>
+        <History aria-hidden="true" />
+        Historique et statistiques
+      </Button>
     </main>
   );
 };

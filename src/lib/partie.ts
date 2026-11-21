@@ -16,12 +16,20 @@ export interface CaseSaisie {
 }
 export type GrilleSaisie = CaseSaisie[][];
 
+// Grille gardée après validation : seulement les valeurs, jamais les doutes du scan ni la photo.
+export type CaseArchivee = Pick<CaseSaisie, "valeur" | "dos">;
+export type GrilleArchivee = CaseArchivee[][];
+
 export interface Partie {
   id: string;
   joueurs: string[];
   manches: number[][]; // manches[m][j] = score du joueur j à la manche m
+  grilles?: GrilleArchivee[][]; // grilles[m][j] = grille corrigée du joueur j à la manche m (absent avant E5)
   creeLe: number;
 }
+
+export const alleger = (g: GrilleSaisie): GrilleArchivee =>
+  g.map((l) => l.map(({ valeur, dos }) => ({ valeur, dos })));
 
 // --- Grille saisie ---
 
