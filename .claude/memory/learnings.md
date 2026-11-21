@@ -15,3 +15,4 @@ register: learnings
 | [LRN-261119_2055-5](learnings/LRN-261119_2055-5.md) | 2026-11-19 | Le « live » de la démo Cactus est une boucle, pas du temps réel | #cactus #temps-reel #webcam #npu #wasm #demo |
 | [LRN-261119_2055-6](learnings/LRN-261119_2055-6.md) | 2026-11-19 | Couleur sur photo délavée : seuil de saturation relatif | #couleur #hsv #saturation #photo #calibration #skyjo |
 | [LRN-261119_2055-7](learnings/LRN-261119_2055-7.md) | 2026-11-19 | Gain estimé par un sous-agent : le mesurer en A/B avant de garder | #subagents #ab-test #performance #mesure #regression #browser |
+| [LRN-261121_1230-1](learnings/LRN-261121_1230-1.md) | 2026-11-21 | Tester un upload photo sans sélecteur : fetch + DataTransfer | #browser-pane #vite #file-input #datatransfer #e2e #fixtures |

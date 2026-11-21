@@ -63,3 +63,39 @@ Implémentation d'E3 S1 à S6 : store de partie Zustand persisté dans IndexedDB
 
 - [BDR-261119_2231-1](decisions/BDR-261119_2231-1.md) — Vitesse : option A pour le MVP, B et C documentées
 - [BDR-261119_2231-2](decisions/BDR-261119_2231-2.md) — Partie : grilles saisies par joueur, score figé à la validation
+
+## 2026-11-21
+
+Session de test du mode partie (commit `0e3ed7a`). Après une checklist de test manuelle pour Baptiste, Claude a joué tout le parcours lui-même dans le browser pane, en injectant les photos réelles du repo dans le champ « Galerie » (fetch + DataTransfer). Tout est passé : création (min 2, max 8, prénoms nettoyés), scans réels justes (48 en 12 s, 66 en 25 s), correction au clavier avec focus restitué, colonnes identiques barrées, rechargement sans perte, fin à 100 avec ex æquo (120-120), file des passes Mirage correcte quand on abandonne un scan pour en lancer un autre.
+
+Remarques UX relevées, non corrigées : « Retirer une colonne » retire toujours la dernière et perd ses valeurs si on la rajoute ; une grille se valide avec des cartes « à saisir » comptées 0 ; quitter l'écran d'un joueur pendant le scan perd ce scan ; pas d'`aria-live` sur le tableau des scores entre les manches (demandé par le critère E3).
+
+Constat : aucun historique n'est gardé (`quitter()` remet la partie à `null`). Création de l'épic E5 « Historique des parties et statistiques » (6 stories, archivage IndexedDB versionné en S1). `.vitest/` ajouté au `.gitignore`. Commit `e429ea6` poussé. Reste : test sur un vrai téléphone (E3-S7).
+
+**Entrées clés :**
+
+- [LRN-261121_1230-1](learnings/LRN-261121_1230-1.md) — Tester un upload photo sans sélecteur : fetch + DataTransfer
+
+---
+
+Démarrage de l'épic E4 (hors ligne et déployé) par l'identité visuelle, via brand-creator. Six directions proposées, Baptiste choisit « Carnet » (encre de stylo bille, papier à carreaux, marge rouge). Côté logo, la première série (icônes Lucide + 3 concepts logo-design en fast track) ne convainc pas : Baptiste retient le fond K et demande de meilleures marques. Deuxième série autour d'un S en segments d'afficheur de score ; il choisit S3 (une carte dont la face montre le S), puis demande de vérifier que logo-design est bien suivi : troisième série en processus complet (carte de mots, types de marque, test des pairs), mais S3 reste le choix, avec une carte agrandie à 61 % de la tuile.
+
+Pendant le moodboard og:image, Baptiste recadre le positionnement : Skyjo Scan est d'abord un compteur de points, le scan n'est qu'un raccourci de saisie. Les textes (og:image, manifest, meta, accroche de l'accueil) sont réécrits dans ce sens ; il choisit le gabarit « Logo ».
+
+PWA (E4-S1) : vite-plugin-pwa avec manifest statique, icônes générées (maskable et apple depuis une source plein cadre dédiée), og-image.png rendue par Satori hors du repo. Écart volontaire au PRD : le modèle et le moteur ne sont pas précachés par le SW (double téléchargement de 21 Mo) mais mis en Cache API par le worker. Vérifié en pnpm preview, serveur coupé. Tokens Carnet appliqués à src/index.css avec des polices fontsource, pour qu'elles marchent hors ligne. Commit cb0fd20, non poussé. Restent : brand-creator étapes 16 à 18 (DESIGN.md, Design System, maquettes), E4-S2 à S4, et recentrer CLAUDE.md sur le compteur.
+
+**Entrées clés :**
+
+- [BDR-261121_1332-1](decisions/BDR-261121_1332-1.md) — Skyjo Scan = compteur d'abord, le scan est un raccourci
+- [BDR-261121_1332-3](decisions/BDR-261121_1332-3.md) — Modèle mis en cache par le worker (Cache API), pas le SW
+
+---
+
+Épic 5 (historique des parties et statistiques) développé pendant qu'une autre conversation terminait l'épic 4 sur `main` : travail isolé dans un worktree `epic-5` pour éviter toute collision (builds, lockfile, commits). Périmètre validé : S1 à S6 ; parties abandonnées comptées pour leurs manches mais pas pour les victoires. Livré : store et clé IndexedDB séparés, archivage automatique en fin de partie ou à l'abandon, écran Historique (liste, détail en lecture seule, suppression), prénoms connus en autocomplétion (`datalist`), stats par joueur, export/import JSON fusionné par id, grilles gardées (valeurs seules). 65 tests Vitest, vérification réelle dans le navigateur en injectant des parties dans IndexedDB.
+
+Une fois l'épic 4 fini (PWA + identité visuelle Carnet), rebase sur `main` avec deux conflits (`App.tsx`, README des épics) résolus en gardant les deux côtés, puis application de la DA Carnet aux écrans Historique (titres Patrick Hand bleu encre, marge rouge sur les cartes, méta en Courier Prime). Fusion en avance rapide dans `main`, changelog mis à jour. Le nettoyage du worktree a buté sur des binaires pnpm liés physiquement au `node_modules` principal encore chargé par les serveurs de dev : dossier à supprimer après arrêt des serveurs.
+
+**Entrées clés :**
+
+- [BDR-261121_1437-1](decisions/BDR-261121_1437-1.md) — Historique : clé séparée, archivage auto, fusion par id
+- [BLK-261121_1437-3](blockers/BLK-261121_1437-3.md) — Dossier worktree epic-5 impossible à supprimer

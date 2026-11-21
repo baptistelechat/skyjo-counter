@@ -18,3 +18,7 @@ register: decisions
 | [BDR-261119_2132-1](decisions/BDR-261119_2132-1.md) | 2026-11-19 | Scan progressif : callback onProgression, final inchangé | #mirage #scanner #progression #ux #attente #callback | actif |
 | [BDR-261119_2231-1](decisions/BDR-261119_2231-1.md) | 2026-11-19 | Vitesse : option A pour le MVP, B et C documentées | #vitesse #mirage #cactus #pwa #capacitor #onnx | actif |
 | [BDR-261119_2231-2](decisions/BDR-261119_2231-2.md) | 2026-11-19 | Partie : grilles saisies par joueur, score figé à la validation | #zustand #indexeddb #partie #grille #score #skyjo | actif |
+| [BDR-261121_1332-1](decisions/BDR-261121_1332-1.md) | 2026-11-21 | Skyjo Scan = compteur d'abord, le scan est un raccourci | #positionnement #copy #manifest #og-image #pwa #produit | actif |
+| [BDR-261121_1332-2](decisions/BDR-261121_1332-2.md) | 2026-11-21 | Identité « Carnet » + icône S3 (carte au S d'afficheur) | #brand #design-tokens #shadcn #icon #logo #fontsource #og-image | actif |
+| [BDR-261121_1332-3](decisions/BDR-261121_1332-3.md) | 2026-11-21 | Modèle mis en cache par le worker (Cache API), pas le SW | #pwa #workbox #cache-api #web-worker #cactus #offline #mirage | actif |
+| [BDR-261121_1437-1](decisions/BDR-261121_1437-1.md) | 2026-11-21 | Historique : clé séparée, archivage auto, fusion par id | #historique #indexeddb #zustand #stats #export-import #skyjo | actif |
