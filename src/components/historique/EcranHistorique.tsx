@@ -33,7 +33,7 @@ const EcranHistorique = ({ onRetour }: Props): React.JSX.Element => {
         >
           <ArrowLeft aria-hidden="true" />
         </Button>
-        <h1 className="text-2xl font-bold">Historique</h1>
+        <h1 className="font-heading text-3xl text-primary">Historique</h1>
       </header>
 
       {partie ? (

@@ -48,7 +48,7 @@ const ExportImport = ({ historique, onImporter }: Props): React.JSX.Element => {
 
   return (
     <section aria-labelledby="titre-sauvegarde" className="flex flex-col gap-2">
-      <h2 id="titre-sauvegarde" className="text-sm font-semibold">
+      <h2 id="titre-sauvegarde" className="font-heading text-lg">
         Sauvegarde
       </h2>
       <div className="grid grid-cols-2 gap-2">

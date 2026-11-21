@@ -34,7 +34,7 @@ const DetailPartie = ({
         Supprimer
       </Button>
     </div>
-    <p className="text-sm text-muted-foreground">
+    <p className="font-mono text-xs text-muted-foreground">
       {dateCourte(partie.creeLe)} → {dateCourte(partie.termineeLe)}
       {partie.statut === "abandonnee" && " · partie abandonnée"}
     </p>
