@@ -30,3 +30,6 @@ dist-ssr
 # Photos réelles prises au téléphone : restent en local (les tests n'utilisent que leurs JSON)
 # tests/fixtures/reel-*.jpg
 # tests/fixtures/reel-*.png
+
+# Rapport JSON généré par Vitest
+.vitest/
